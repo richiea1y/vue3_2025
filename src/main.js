@@ -19,6 +19,6 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 // 全局註冊 SvgIcon 組件，給自定義 icon 使用
-app.component('SvgIcon', SvgIcon);
+// app.component('SvgIcon', SvgIcon);
 
 app.mount('#app');
