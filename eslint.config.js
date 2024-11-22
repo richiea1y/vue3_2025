@@ -21,12 +21,12 @@ export default [
   {
     name: 'app/custom-rules',
     rules: {
-      'no-unused-vars': ['warn', {
-        vars: 'all',
-        args: 'after-used',
-        ignoreRestSiblings: true,
-        varsIgnorePattern: '^_',
-        argsIgnorePattern: '^_',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn', {  // 使用 TypeScript 的檢查替代
+        'argsIgnorePattern': '^_',
+        'varsIgnorePattern': '^_',
+        'caughtErrorsIgnorePattern': '^_',
+        'ignoreRestSiblings': true,
       }],
       'vue/no-unused-components': ['warn', {
         ignoreWhenBindingPresent: true
