@@ -46,6 +46,26 @@
         </el-steps>
       </el-card>
 
+      <!-- 日誌面板 -->
+      <el-card class="mt-4">
+        <template #header>
+          <div class="card-header">
+            <span>生命週期事件日誌</span>
+            <el-button text @click="clearLogs">清除日誌</el-button>
+          </div>
+        </template>
+        <el-scrollbar height="300px">
+          <el-timeline>
+            <el-timeline-item v-for="(log, index) in logs" :key="index" :type="getTimelineItemType(log.type)">
+              <span class="time">{{ log.message }}</span>
+              <span :class="['message', log.type]">
+                {{ log.message.split(' - ')[1] }}
+              </span>
+            </el-timeline-item>
+          </el-timeline>
+        </el-scrollbar>
+      </el-card>
+
       <!-- 組件展示區 -->
       <el-card class="mt-4">
         <template #header>
@@ -53,47 +73,32 @@
             <span>當前狀態：{{ isKeepAlive ? '組件狀態會保留' : '組件狀態會重置' }}</span>
           </div>
         </template>
-        <keep-alive v-if="isKeepAlive">
-          <component :is="currentComponent" :parent-message="parentMessage" @child-event="handleChildEvent"></component>
-        </keep-alive>
-        <component
-          v-else
-          :is="currentComponent"
-          :parent-message="parentMessage"
-          @child-event="handleChildEvent"
-        ></component>
-      </el-card>
-
-      <!-- 日誌面板 -->
-      <el-card class="mt-4">
-        <template #header>
-          <div class="card-header">
-            <span>狀態變化日誌</span>
-            <el-button text @click="clearLogs">清除日誌</el-button>
-          </div>
+        <template v-if="isKeepAlive">
+          <keep-alive>
+            <component
+              :is="currentComponent"
+              :parent-message="parentMessage"
+              @child-event="handleChildEvent"
+            ></component>
+          </keep-alive>
         </template>
-        <el-scrollbar height="300px">
-          <el-timeline>
-            <el-timeline-item
-              v-for="(log, index) in logs"
-              :key="index"
-              :type="getTimelineItemType(log.type)"
-              :timestamp="log.message.split(' - ')[0]"
-            >
-              {{ log.message.split(' - ')[1] }}
-            </el-timeline-item>
-          </el-timeline>
-        </el-scrollbar>
+        <template v-else>
+          <component
+            :is="currentComponent"
+            :parent-message="parentMessage"
+            @child-event="handleChildEvent"
+            :key="currentComponent === ComponentA ? 'A' : 'B'"
+          ></component>
+        </template>
       </el-card>
     </el-card>
   </div>
 </template>
 
 <script setup>
-import { ref, shallowRef, provide, defineAsyncComponent } from 'vue';
-
-const ComponentA = defineAsyncComponent(() => import('./components/componentA.vue'));
-const ComponentB = defineAsyncComponent(() => import('./components/componentB.vue'));
+import { ref, shallowRef, provide } from 'vue';
+import ComponentA from './components/componentA.vue';
+import ComponentB from './components/componentB.vue';
 
 // 狀態管理
 const currentComponent = shallowRef(ComponentA);
@@ -103,18 +108,30 @@ const parentMessage = ref('');
 
 // 方法
 const toggleComponent = () => {
+  const oldComponent = currentComponent.value === ComponentA ? 'A' : 'B';
+  addLog(`組件${oldComponent} - 準備切換`, 'lifecycle');
+
   currentComponent.value = currentComponent.value === ComponentA ? ComponentB : ComponentA;
-  addLog(`切換到${currentComponent.value === ComponentA ? 'A' : 'B'}組件`, 'info');
+  const newComponent = currentComponent.value === ComponentA ? 'A' : 'B';
+
+  addLog(`切換到組件${newComponent}`, 'info');
 };
 
 const toggleKeepAlive = () => {
+  const oldState = isKeepAlive.value;
   isKeepAlive.value = !isKeepAlive.value;
+
   addLog(
     `${isKeepAlive.value ? '開啟' : '關閉'} Keep-Alive - ${
       isKeepAlive.value ? '組件狀態將被保留' : '組件狀態將被重置'
     }`,
     'important'
   );
+
+  if (!isKeepAlive.value) {
+    const currentName = currentComponent.value === ComponentA ? 'A' : 'B';
+    addLog(`組件${currentName} - 將被重新創建`, 'lifecycle');
+  }
 };
 
 const addLog = (message, type = 'info') => {
@@ -140,13 +157,16 @@ const sendMessageToChild = () => {
 
 const getTimelineItemType = type => {
   const typeMap = {
-    info: 'primary',
-    mounted: 'success',
-    unmounted: 'danger',
-    updated: 'warning',
-    activated: 'success',
-    deactivated: 'warning',
-    important: 'danger'
+    lifecycle: 'primary', // 生命週期基礎事件 (藍色)
+    mounted: 'success', // 掛載相關 (綠色)
+    update: 'warning', // 更新相關 (黃色)
+    updated: 'warning', // 更新完成 (黃色)
+    unmount: 'danger', // 卸載相關 (紅色)
+    unmounted: 'danger', // 卸載完成 (紅色)
+    activated: 'success', // keep-alive 啟用 (綠色)
+    deactivated: 'warning', // keep-alive 停用 (黃色)
+    important: 'danger', // 重要狀態變更 (紅色)
+    info: 'info' // 一般信息 (灰色)
   };
   return typeMap[type] || 'info';
 };
@@ -178,5 +198,38 @@ provide('addLog', addLog);
 
 :deep(.el-timeline-item__content) {
   font-size: 14px;
+}
+
+.message {
+  margin-left: 8px;
+
+  &.lifecycle {
+    color: #409eff;
+  }
+  &.mounted {
+    color: #67c23a;
+  }
+  &.update,
+  &.updated {
+    color: #e6a23c;
+  }
+  &.unmount,
+  &.unmounted {
+    color: #f56c6c;
+  }
+  &.activated {
+    color: #67c23a;
+  }
+  &.deactivated {
+    color: #e6a23c;
+  }
+  &.important {
+    color: #f56c6c;
+  }
+}
+
+.time {
+  color: #909399;
+  font-size: 0.9em;
 }
 </style>

@@ -1,3 +1,4 @@
+<!-- componentA.vue -->
 <template>
   <div class="component">
     <h2>組件 A</h2>
@@ -43,35 +44,35 @@ const emit = defineEmits(['child-event']);
 
 // 生命週期鉤子
 onBeforeMount(() => {
-  addLog('組件A - beforeMount');
+  addLog('組件A - beforeMount - 組件準備掛載', 'lifecycle');
 });
 
 onMounted(() => {
-  addLog('組件A - mounted', 'mounted');
+  addLog('組件A - mounted - 組件已掛載完成', 'mounted');
 });
 
 onBeforeUpdate(() => {
-  addLog('組件A - beforeUpdate');
+  addLog('組件A - beforeUpdate - 組件準備更新', 'update');
 });
 
 onUpdated(() => {
-  addLog('組件A - updated', 'updated');
+  addLog('組件A - updated - 組件已更新完成', 'updated');
 });
 
 onBeforeUnmount(() => {
-  addLog('組件A - beforeUnmount');
+  addLog('組件A - beforeUnmount - 組件準備卸載', 'unmount');
 });
 
 onUnmounted(() => {
-  addLog('組件A - unmounted', 'unmounted');
+  addLog('組件A - unmounted - 組件已卸載完成', 'unmounted');
 });
 
 onActivated(() => {
-  addLog('組件A - activated', 'activated');
+  addLog('組件A - activated - Keep-alive 組件已啟用', 'activated');
 });
 
 onDeactivated(() => {
-  addLog('組件A - deactivated', 'deactivated');
+  addLog('組件A - deactivated - Keep-alive 組件已停用', 'deactivated');
 });
 
 const increment = () => {
@@ -82,7 +83,7 @@ const increment = () => {
 const sendToParent = () => {
   if (childMessage.value.trim()) {
     emit('child-event', childMessage.value);
-    childMessage.value = ''; // 清空輸入
+    childMessage.value = '';
   }
 };
 </script>

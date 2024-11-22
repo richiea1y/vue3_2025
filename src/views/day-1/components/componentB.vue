@@ -1,8 +1,9 @@
+<!-- componentB.vue -->
 <template>
   <div class="component">
     <h2>組件 B</h2>
     <p>文本輸入: {{ text }}</p>
-    <input v-model="text" placeholder="輸入一些文字" @input="handleInput" />
+    <input v-model="text" placeholder="輸入一些文字" />
 
     <div class="message-area">
       <h4>來自父組件的消息: {{ parentMessage }}</h4>
@@ -41,47 +42,42 @@ const props = defineProps({
 
 const emit = defineEmits(['child-event']);
 
-// 生命週期鉤子
 onBeforeMount(() => {
-  addLog('組件B - beforeMount');
+  addLog('組件B - beforeMount - 組件準備掛載', 'lifecycle');
 });
 
 onMounted(() => {
-  addLog('組件B - mounted', 'mounted');
+  addLog('組件B - mounted - 組件已掛載完成', 'mounted');
 });
 
 onBeforeUpdate(() => {
-  addLog('組件B - beforeUpdate');
+  addLog('組件B - beforeUpdate - 組件準備更新', 'update');
 });
 
 onUpdated(() => {
-  addLog('組件B - updated', 'updated');
+  addLog('組件B - updated - 組件已更新完成', 'updated');
 });
 
 onBeforeUnmount(() => {
-  addLog('組件B - beforeUnmount');
+  addLog('組件B - beforeUnmount - 組件準備卸載', 'unmount');
 });
 
 onUnmounted(() => {
-  addLog('組件B - unmounted', 'unmounted');
+  addLog('組件B - unmounted - 組件已卸載完成', 'unmounted');
 });
 
 onActivated(() => {
-  addLog('組件B - activated', 'activated');
+  addLog('組件B - activated - Keep-alive 組件已啟用', 'activated');
 });
 
 onDeactivated(() => {
-  addLog('組件B - deactivated', 'deactivated');
+  addLog('組件B - deactivated - Keep-alive 組件已停用', 'deactivated');
 });
-
-const handleInput = () => {
-  emit('child-event', `文本更新：${text.value}`);
-};
 
 const sendToParent = () => {
   if (childMessage.value.trim()) {
     emit('child-event', childMessage.value);
-    childMessage.value = ''; // 清空輸入
+    childMessage.value = '';
   }
 };
 </script>
