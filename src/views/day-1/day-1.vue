@@ -30,42 +30,6 @@
         </el-input>
       </el-card>
 
-      <!-- 說明面板 -->
-      <el-card class="mt-4">
-        <template #header>
-          <div class="card-header">
-            <span>測試步驟</span>
-          </div>
-        </template>
-        <el-steps direction="vertical" :active="1">
-          <el-step title="步驟 1" description="在組件A中增加幾次計數" />
-          <el-step title="步驟 2" description="切換到組件B並輸入一些文字" />
-          <el-step title="步驟 3" description="再切換回組件A" />
-          <el-step title="步驟 4" description="關閉 Keep-Alive 重複以上步驟" />
-          <el-step title="步驟 5" description="觀察兩種情況下的狀態保留差異" />
-        </el-steps>
-      </el-card>
-
-      <!-- 日誌面板 -->
-      <el-card class="mt-4">
-        <template #header>
-          <div class="card-header">
-            <span>生命週期事件日誌</span>
-            <el-button text @click="clearLogs">清除日誌</el-button>
-          </div>
-        </template>
-        <el-scrollbar height="300px">
-          <el-timeline>
-            <el-timeline-item v-for="(log, index) in logs" :key="index" :type="getTimelineItemType(log.type)">
-              <span class="time">{{ log.message }}</span>
-              <span :class="['message', log.type]">
-                {{ log.message.split(' - ')[1] }}
-              </span>
-            </el-timeline-item>
-          </el-timeline>
-        </el-scrollbar>
-      </el-card>
-
       <!-- 組件展示區 -->
       <el-card class="mt-4">
         <template #header>
@@ -90,6 +54,42 @@
             :key="currentComponent === ComponentA ? 'A' : 'B'"
           ></component>
         </template>
+      </el-card>
+
+      <!-- 日誌面板 -->
+      <el-card class="mt-4">
+        <template #header>
+          <div class="card-header">
+            <span>生命週期事件日誌</span>
+            <el-button text @click="clearLogs">清除日誌</el-button>
+          </div>
+        </template>
+        <el-scrollbar height="300px">
+          <el-timeline>
+            <el-timeline-item v-for="(log, index) in logs" :key="index" :type="getTimelineItemType(log.type)">
+              <span class="time">{{ log.message }}</span>
+              <span :class="['message', log.type]">
+                {{ log.message.split(' - ')[1] }}
+              </span>
+            </el-timeline-item>
+          </el-timeline>
+        </el-scrollbar>
+      </el-card>
+
+      <!-- 說明面板 -->
+      <el-card class="mt-4">
+        <template #header>
+          <div class="card-header">
+            <span>測試步驟</span>
+          </div>
+        </template>
+        <el-steps direction="vertical" :active="1">
+          <el-step title="步驟 1" description="在組件A中增加幾次計數" />
+          <el-step title="步驟 2" description="切換到組件B並輸入一些文字" />
+          <el-step title="步驟 3" description="再切換回組件A" />
+          <el-step title="步驟 4" description="關閉 Keep-Alive 重複以上步驟" />
+          <el-step title="步驟 5" description="觀察兩種情況下的狀態保留差異" />
+        </el-steps>
       </el-card>
     </el-card>
   </div>
