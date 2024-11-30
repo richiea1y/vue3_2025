@@ -46,9 +46,26 @@ const emit = defineEmits(['update-quantity', 'remove-item']);
 
 const totalPrice = computed(() => {
   return props.cartItems.reduce((sum, item) => {
-    return new Decimal(sum).plus(new Decimal(item.price).mul(item.quantity)).toNumber();
+    // 用折扣後的小計而不是原價 item.price
+    return new Decimal(sum).plus(getSubtotal(item)).toNumber();
   }, 0);
 });
+
+const discountStrategies = {
+  PERCENTAGE: (price, discount) => {
+    const originalPrice = new Decimal(price);
+    // 1 - 0.1 = 0.9
+    const discountRate = new Decimal(1).minus(new Decimal(discount));
+    return originalPrice.mul(discountRate).toDecimalPlaces(0);
+  },
+  FIXED: (price, discount) => {
+    const originalPrice = new Decimal(price);
+    // 2000 - 100 = 1900
+    const discountAmount = new Decimal(discount);
+    return originalPrice.minus(discountAmount).toDecimalPlaces(0);
+  },
+  NONE: price => new Decimal(price)
+};
 
 // 格式化價格顯示方式
 const formatPrice = price => {
@@ -61,6 +78,8 @@ const formatPrice = price => {
 
 // 單項商品小計
 const getSubtotal = item => {
-  return new Decimal(item.price).mul(item.quantity).toNumber();
+  const { price, discountType, discount } = item;
+  const calDiscount = discountStrategies[discountType] ?? discountStrategies.NONE;
+  return calDiscount(price, discount).mul(item.quantity).toNumber();
 };
 </script>
