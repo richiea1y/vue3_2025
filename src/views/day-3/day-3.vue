@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 import { onWatcherCleanup } from 'vue';
 
@@ -78,6 +78,13 @@ const addLog = (message, type = 'info') => {
   });
 };
 
+let effectVal = 0;
+
+watchEffect(() => {
+  console.log('#### Effect searchQuery:', searchQuery.value);
+  console.log('#### Effect effectVal:', effectVal);
+});
+
 // 使用 watch 和 onWatcherCleanup 處理搜索
 watch(
   searchQuery,
@@ -86,7 +93,7 @@ watch(
       searchResult.value = null;
       return;
     }
-
+    effectVal++;
     let canceled = false;
 
     // 註冊清理函數
