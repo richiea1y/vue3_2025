@@ -1,0 +1,86 @@
+<template>
+  <main class="payment-page">
+    <div class="header-container">
+      <div class="header-container-total-amount">
+        <header>支付總金額 : </header>
+        <input type="text" placeholder="輸入需支付的總金額">
+      </div>
+      <button>新增支付項目＋</button>
+    </div>
+    <div class="card-container">
+      <PaymentCard />
+    </div>
+    
+    <div class="footer-container">
+      <div class="payment">
+        <h2>已支付金額</h2>
+        <p>0</p>
+      </div>
+      <div class="total-remain-balance">
+        <h2>付款次數 / 剩餘款項</h2>
+        <p>0</p>
+      </div>
+      <div class="submit-bt">
+        <button>確認送出</button>
+      </div>
+    </div>
+  </main>
+  
+</template>
+
+<script setup>
+import { ref, watch, watchEffect } from 'vue';
+import { Search } from '@element-plus/icons-vue';
+import PaymentCard from './components/PaymentCard.vue';
+
+const totalPayment = ref(0);
+</script>
+
+
+
+
+<style scoped>
+.payment-page {
+  background-color: rgb(252, 252, 252);
+  color: #000;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.header-container,
+.card-container,
+.footer-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px 20px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 10px;
+}
+
+.header-container-total-amount {
+  display: flex;
+  align-items: center;
+}
+
+.header-container input {
+  padding: 5px;
+  border: 1px solid #000;
+  margin: 5px ;
+  text-align: center;
+  margin-left: 10px;
+}
+
+
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 10px;
+}
+</style> 
