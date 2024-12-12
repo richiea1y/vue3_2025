@@ -32,13 +32,42 @@
 import { ref, watch, watchEffect } from 'vue';
 import { Decimal } from 'decimal.js';
 import PaymentCard from './components/PaymentCard.vue';
+import to from 'await-to-js';
 
 const inputTotalPayment = ref('');
 const totalPayment = ref(0);
 
-const convertTotalPayment = () => {
-  return new Decimal(inputTotalPayment.value).toNumber();
-}
+// 將數字轉換為有千位分隔符的格式
+const formatNumber = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+// 移除所有非數字字符
+const unformatNumber = (str) => {
+  return str.replace(/[^\d]/g, '');
+};
+
+watch(inputTotalPayment, (newValue) => {
+  // 移除所有非數字字符
+  const plainNumber = unformatNumber(newValue);
+  
+  if (plainNumber) {
+    // 更新實際數值
+    totalPayment.value = Number(plainNumber);
+    
+    // 更新顯示格式（但不觸發遞迴）
+    const formatted = formatNumber(plainNumber);
+    if (formatted !== newValue) {
+      inputTotalPayment.value = formatted;
+    }
+  } else {
+    // 如果輸入為空或無效
+    totalPayment.value = 0;
+    inputTotalPayment.value = '';
+  }
+  
+  console.log('實際數值：', totalPayment.value);
+});
 
 
 
@@ -82,6 +111,10 @@ const convertTotalPayment = () => {
 .header-container-total-amount {
   display: flex;
   align-items: center;
+}
+
+.header-container-total-amount input {
+  width: 170px;
 }
 
 .header-container input {
