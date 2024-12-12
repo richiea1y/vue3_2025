@@ -27,6 +27,13 @@ const chapters = [
     route: 'day-3',
     topics: ['watch', 'watchEffect', 'onWatchEffect'],
     difficulty: 'basic'
+  },
+  {
+    day: 4,
+    title: 'Axios API請求套件',
+    route: 'day-4',
+    topics: ['api', 'axios', 'http'],
+    difficulty: 'basic'
   }
 ];
 
