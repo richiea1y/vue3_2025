@@ -27,8 +27,6 @@ const chapters = [
     title: 'Watch 監聽器',
     route: 'day-3',
     topics: ['watch', 'watchEffect', 'onWatchEffect'],
-<<<<<<< HEAD
-=======
     difficulty: 'basic'
   },
   {
@@ -36,7 +34,6 @@ const chapters = [
     title: 'Axios API請求套件',
     route: 'day-4',
     topics: ['api', 'axios', 'http'],
->>>>>>> class/day-4-axios
     difficulty: 'basic'
   }
 ];
