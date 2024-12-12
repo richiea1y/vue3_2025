@@ -1,7 +1,8 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElCard, ElButton, ElTag } from 'element-plus';
+import { getGoodsList } from '@/service/api';
 
 const router = useRouter();
 
@@ -57,6 +58,16 @@ const difficultyMap = {
 const navigateToChapter = route => {
   router.push({ name: route });
 };
+
+console.log(import.meta.env.VITE_BASE_API);
+
+// DOM 加載完成後獲取商品列表
+onMounted(async () => {
+  await getGoodsList({
+    Page: 0,
+    PageLimit: 20
+  });
+});
 </script>
 
 <template>
