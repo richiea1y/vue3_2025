@@ -22,9 +22,15 @@ const routes = [
     component: () => import('../views/day-3/day-3.vue')
   },
   {
+<<<<<<< HEAD
     path: '/work-1',
     name: 'work-1',
     component: () => import('../views/work-1/work-1.vue')
+=======
+    path: '/day-4',
+    name: 'day-4',
+    component: () => import('../views/day-4/day-4.vue')
+>>>>>>> class/day-4-axios
   },
 ]
 

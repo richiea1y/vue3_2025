@@ -32,4 +32,8 @@ coverage
 test-results/
 playwright-report/
 
+<<<<<<< HEAD
 deploy.sh
+=======
+.env.*
+>>>>>>> class/day-4-axios
