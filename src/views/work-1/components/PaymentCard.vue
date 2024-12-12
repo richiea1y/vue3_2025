@@ -4,7 +4,7 @@
       <div class="payment-method-container">
         <p>支付方式</p>
         <div class="payment-method-radio">
-          <input type="radio" name="cash" id="cash" checked>
+          <input type="radio" name="cash" id="cash">
           <label for="cash">現金</label>
         </div>
         <div class="payment-method-radio">
