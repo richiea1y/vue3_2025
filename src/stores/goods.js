@@ -4,21 +4,21 @@ import { getGoodsList } from '@/service/api'
 
 export const useGoodsStore = defineStore('goods', () => {
   // state
-  const goodsData = ref([])
+  const productList = ref([])
 
   // getters
-  const getGoodsData = computed(() => {
-    return goodsData.value
+  const getProducts = computed(() => {
+    return productList.value
   })
 
   // actions
-  const goodsListRequest = async () => {
+  const getProductList = async () => {
     try {
       const res = await getGoodsList({
         Page: 0,
         PageLimit: 20
       })
-      goodsData.value = res.data.Data
+      productList.value = res.data.Data
     } catch (error) {
       console.error(error)
     }
@@ -26,8 +26,8 @@ export const useGoodsStore = defineStore('goods', () => {
   }
 
   return {
-    goodsData,
-    getGoodsData,
-    goodsListRequest
+    productList,
+    getProducts,
+    getProductList
   }
 })

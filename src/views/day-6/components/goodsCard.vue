@@ -17,7 +17,14 @@
 
       <!-- 規格標籤 -->
       <div class="mt-2 space-x-2">
-        <el-tag v-for="spec in goods.GoodsSpecs" :key="spec.ID" size="small" type="info">
+        <el-tag
+          v-for="(spec, idx) in goods.GoodsSpecs"
+          :key="spec.ID"
+          class="mt-2 cursor-pointer"
+          size="small"
+          type="info"
+          @click="handleSpecClick(idx)"
+        >
           {{ spec.Specs }}
         </el-tag>
       </div>
@@ -46,5 +53,10 @@ const handleTypeClick = () => {
 // 點擊商品名稱
 const handleNameClick = () => {
   updateFilter({ keyword: props.goods.Name });
+};
+
+// 點擊商品規格標籤
+const handleSpecClick = idx => {
+  updateFilter({ spec: props.goods.GoodsSpecs[idx].Specs });
 };
 </script>

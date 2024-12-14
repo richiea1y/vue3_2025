@@ -1,14 +1,15 @@
 <template>
-  <div>
+  <div class="p-4">
     <!-- 顯示當前過濾狀態 -->
-    <div class="mb-4">
-      <el-tag v-if="activeType">類型: {{ activeType }}</el-tag>
+    <div class="flex items-center gap-2 mb-4">
       <el-tag v-if="searchText">關鍵字: {{ searchText }}</el-tag>
+      <el-tag v-if="activeType">類型: {{ activeType }}</el-tag>
+      <el-tag v-if="specText">規格: {{ specText }}</el-tag>
     </div>
 
     <!-- 商品列表 -->
     <div class="grid grid-cols-4 gap-4">
-      <GoodsCard v-for="item in goodsStore.getGoodsData" :key="item.ID" :goods="item" />
+      <GoodsCard v-for="item in goodsStore.getProducts" :key="item.ID" :goods="item" />
     </div>
   </div>
 </template>
@@ -21,16 +22,16 @@ import { useGoodsStore } from '@/stores/goods';
 
 const goodsStore = useGoodsStore();
 
-const { activeType, searchText } = useGoodsProvider();
+const { activeType, searchText, specText } = useGoodsProvider();
 
 // 監聽過濾條件變化
-watch([activeType, searchText], ([type, keyword]) => {
-  console.log('過濾條件更新：', { type, keyword });
+watch([activeType, searchText, specText], ([type, keyword, spec]) => {
+  console.log('過濾條件更新：', { type, keyword, spec });
   // 這裡可以觸發你的過濾邏輯
 });
 
 onMounted(async () => {
   await nextTick();
-  goodsStore.goodsListRequest();
+  goodsStore.getProductList();
 });
 </script>
