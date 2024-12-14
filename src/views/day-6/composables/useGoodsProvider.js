@@ -10,11 +10,19 @@ export function useGoodsProvider() {
   // 規格TAG
   const specText = ref('')
 
+
+  // 策略對象
+  const filterStrategies = {
+    type: (value) => activeType.value = value,
+    keyword: (value) => searchText.value = value,
+    spec: (value) => specText.value = value
+  }
+
   // 提供給子組件更新狀態的方法
   const updateFilter = ({ type, keyword, spec }) => {
-    if (type !== undefined) activeType.value = type
-    if (keyword !== undefined) searchText.value = keyword
-    if (spec !== undefined) specText.value = spec
+    type !== undefined && filterStrategies.type(type)
+    keyword !== undefined && filterStrategies.keyword(keyword)
+    spec !== undefined && filterStrategies.spec(spec)
   }
 
   provide(GOODS_KEY, {
