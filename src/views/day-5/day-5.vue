@@ -42,8 +42,10 @@
 <script setup>
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import { useMetaOptionsStore } from '@/stores/metaOptions';
+import { storeToRefs } from 'pinia';
 
 const metaOptionsStore = useMetaOptionsStore();
+// const { getMetaStatus, getMetaPayment, getMetaMember } = storeToRefs(metaOptionsStore);
 
 const form = ref({
   status: '',
