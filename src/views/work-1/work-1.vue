@@ -1,11 +1,26 @@
 <template>
   <main class="payment-page">
     <div class="header-container">
-      <div class="header-container-total-amount">
-        <header>支付總金額 : </header>
-        <input type="text" placeholder="輸入需支付的總金額" v-model="inputTotalPayment">
+      <div class="flex">
+        <p class="basis-2/3 content-center text-lg font-medium">支付總金額 :</p>
+        <el-input 
+          class="w-2 m-2"
+          type="text"
+          size="large"
+          placeholder="輸入需支付的總金額"
+          :formatter="formatNumber"
+          :parser="unformatNumber"
+          v-model="inputTotalPayment" 
+        />
       </div>
-      <button @click="addPaymentCard">新增支付項目＋</button>
+      <el-button 
+        size="large"
+        color="#000"
+        plain
+        @click="addPaymentCard"
+      >
+        新增支付項目 ＋
+      </el-button>
     </div>
     <div class="card-container">
       <PaymentCard 
@@ -17,15 +32,17 @@
     
     <div class="footer-container">
       <div class="payment">
-        <h2>已支付金額</h2>
-        <p>0</p>
+        <h2 class="text-lg">已支付金額</h2>
+        <p class="text-lg text-[#bfa965]">0</p>
       </div>
       <div class="total-remain-balance">
-        <h2>付款次數 / 剩餘款項</h2>
-        <p>0</p>
+        <h2 class="text-lg">付款次數 / 剩餘款項</h2>
+        <p class="text-lg text-[#bfa965]" >0</p>
       </div>
       <div class="submit-bt">
-        <button>確認送出</button>
+        <el-button type="primary" size="large">
+          確認送出
+        </el-button>
       </div>
     </div>
   </main>
@@ -37,42 +54,35 @@ import { ref, watch, watchEffect } from 'vue';
 import { Decimal } from 'decimal.js';
 import PaymentCard from './components/PaymentCard.vue';
 import to from 'await-to-js';
-import { id } from 'element-plus/es/locales.mjs';
 
 const inputTotalPayment = ref('');
 const totalPayment = ref(0);
 
+
 // 將數字轉換為有千位分隔符的格式
 const formatNumber = (num) => {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return `$ ${num}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 };
 
-// 移除所有非數字字符
 const unformatNumber = (str) => {
   return str.replace(/[^\d]/g, '');
 };
 
 watch(inputTotalPayment, (newValue) => {
   // 移除所有非數字字符
-  const plainNumber = unformatNumber(newValue);
+  const plainNumber = Number(newValue);
   
   if (plainNumber) {
     // 更新實際數值
     totalPayment.value = Number(plainNumber);
-    
-    // 更新顯示格式（但不觸發遞迴）
-    const formatted = formatNumber(plainNumber);
-    if (formatted !== newValue) {
-      inputTotalPayment.value = formatted;
-    }
   } else {
     // 如果輸入為空或無效
     totalPayment.value = 0;
-    inputTotalPayment.value = '';
   }
   
   console.log('實際數值：', totalPayment.value);
 });
+
 
 // Card operation
 const paymentCards = ref([]);
@@ -124,23 +134,6 @@ const removePaymentCard = (index) => {
   padding: 2rem 10px 1rem;
 }
 
-.header-container button {
-  padding: 10px 20px;
-  background-color: #000;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.header-container-total-amount {
-  display: flex;
-  align-items: center;
-}
-
-.header-container-total-amount input {
-  width: 170px;
-}
 
 .header-container input {
   padding: 5px;
@@ -162,12 +155,12 @@ const removePaymentCard = (index) => {
   padding: 2rem 10px;
 }
 
-.submit-bt button {
+/* .submit-bt button {
   padding: 10px 20px;
   background-color: #000;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
+} */
 </style> 
