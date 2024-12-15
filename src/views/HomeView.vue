@@ -3,6 +3,7 @@ import { computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElCard, ElButton, ElTag } from 'element-plus';
 import { getGoodsList } from '@/service/api';
+import axios from 'axios';
 
 const router = useRouter();
 
@@ -34,7 +35,21 @@ const chapters = [
     title: 'Axios API請求套件',
     route: 'day-4',
     topics: ['api', 'axios', 'http'],
-    difficulty: 'basic'
+    difficulty: 'intermediate'
+  },
+  {
+    day: 5,
+    title: 'Store 狀態管理',
+    route: 'day-5',
+    topics: ['Pinia', 'store'],
+    difficulty: 'intermediate'
+  },
+  {
+    day: 6,
+    title: 'Provide/Inject 跨層級傳值',
+    route: 'day-6',
+    topics: ['provide', 'inject'],
+    difficulty: 'intermediate'
   }
 ];
 
@@ -61,12 +76,20 @@ const navigateToChapter = route => {
 
 console.log(import.meta.env.VITE_BASE_API);
 
+// 直接使用axios發送請求
+
+const getCountries = async () => {
+  const { data } = await axios.get('https://restcountries.com/v3.1/all');
+  console.log('## countries', data);
+};
+
 // DOM 加載完成後獲取商品列表
 onMounted(async () => {
-  await getGoodsList({
-    Page: 0,
-    PageLimit: 20
-  });
+  // await getGoodsList({
+  //   Page: 0,
+  //   PageLimit: 20
+  // });
+  // await getCountries();
 });
 </script>
 
