@@ -50,8 +50,18 @@ const chapters = [
     route: 'day-6',
     topics: ['provide', 'inject'],
     difficulty: 'intermediate'
-  }
+  },
 ];
+
+const assignments = [
+  {
+    work: 1,
+    title: 'Composable 練習',
+    route: 'work-1',
+    topics: ['composable', 'componenet'],
+    difficulty: 'basic'
+  }
+]
 
 // 難度標籤對照
 const difficultyMap = {
@@ -113,6 +123,27 @@ onMounted(async () => {
         </div>
 
         <el-button type="primary" @click="navigateToChapter(chapter.route)" class="w-full"> 前往學習 </el-button>
+      </div>
+    </el-card>
+    <!-- work assignment -->
+    <el-card v-for="assignment in assignments" :key="assignment.work" class="hover:shadow-lg transition-shadow duration-300">
+      <template #header>
+        <div class="flex justify-between items-center">
+          <span class="text-lg font-medium"> Day-{{ assignment.work }}: {{ assignment.title }} </span>
+          <el-tag :type="difficultyMap[assignment.difficulty].type" size="small">
+            {{ difficultyMap[assignment.difficulty].label }}
+          </el-tag>
+        </div>
+      </template>
+
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-wrap gap-2">
+          <el-tag v-for="topic in assignment.topics" :key="topic" type="info" effect="plain" size="small">
+            {{ topic }}
+          </el-tag>
+        </div>
+
+        <el-button type="primary" @click="navigateToChapter(assignment.route)" class="w-full"> 前往練習 </el-button>
       </div>
     </el-card>
   </div>

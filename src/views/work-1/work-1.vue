@@ -5,10 +5,14 @@
         <header>支付總金額 : </header>
         <input type="text" placeholder="輸入需支付的總金額" v-model="inputTotalPayment">
       </div>
-      <button>新增支付項目＋</button>
+      <button @click="addPaymentCard">新增支付項目＋</button>
     </div>
     <div class="card-container">
-      <PaymentCard />
+      <PaymentCard 
+      v-for="(card, index) in paymentCards"
+      :key="index"
+      @remove-card="removePaymentCard(index)"
+      />
     </div>
     
     <div class="footer-container">
@@ -33,6 +37,7 @@ import { ref, watch, watchEffect } from 'vue';
 import { Decimal } from 'decimal.js';
 import PaymentCard from './components/PaymentCard.vue';
 import to from 'await-to-js';
+import { id } from 'element-plus/es/locales.mjs';
 
 const inputTotalPayment = ref('');
 const totalPayment = ref(0);
@@ -69,7 +74,27 @@ watch(inputTotalPayment, (newValue) => {
   console.log('實際數值：', totalPayment.value);
 });
 
+// Card operation
+const paymentCards = ref([]);
+const addPaymentCard = () => {
+  paymentCards.value.push({
+    id: `${paymentCards.value.length + 1}`,
+    paymentTerm: '',
+    paymentMethod: '',
+    percentage: '',
+    deadline: '',
+  });
+}
 
+const removePaymentCard = (index) => {
+  paymentCards.value.splice(index, 1);
+}
+
+// const removePaymentCard = (id) => {
+//   const index = paymentCard.value.findIndex((card) => card.id === id);
+//   paymentCard.value.splice(index, 1);
+// }
+// console.log(Date.now());
 
 </script>
 
@@ -89,14 +114,14 @@ watch(inputTotalPayment, (newValue) => {
 .footer-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
 }
 
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 10px;
+  padding: 2rem 10px 1rem;
 }
 
 .header-container button {
@@ -126,7 +151,9 @@ watch(inputTotalPayment, (newValue) => {
   margin-left: 10px;
 }
 
-
+.card-container {
+  padding: 0 10px;
+}
 
 .footer-container {
   display: flex;
