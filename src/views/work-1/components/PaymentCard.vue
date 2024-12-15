@@ -1,5 +1,6 @@
 <template>
   <div class="payment-card-container">
+    <!-- Card header -->
     <div class="payment-card-header">
       <div class="payment-method-container">
         <p>支付方式</p>
@@ -16,8 +17,9 @@
         <p>未付款</p>
         <button>確認付款</button>
       </div>
-      <button class="delete-card-bt">x</button>
+      <button class="delete-card-bt" @click="$emit('remove-card')">x</button>
     </div>
+    <!-- Card content -->
     <div class="payment-card-content">
       <div class="payment-amount">
         <p>金額（整數）</p>
@@ -37,7 +39,7 @@
 </template>
 
 <script setup>
-
+defineEmits(['remove-card']);
 </script>
 
 <style scoped>
@@ -52,6 +54,7 @@
   border: 1px solid #e4e4e4;
   background-color: #e4e4e4;
   border-radius: 5px;
+  margin: 1.3rem 0;
 }
 
 .payment-card-header {
