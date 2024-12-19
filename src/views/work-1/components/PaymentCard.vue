@@ -4,7 +4,7 @@
     <div class="payment-card-header">
       <div class="paymentMethod flex">
         <p class="text-lg font-medium content-center mr-2">支付方式：</p>
-        <el-radio-group v-model="paymentMethod">
+        <el-radio-group >
           <el-radio value="1" label="cash">現金</el-radio>
           <el-radio value="2" label="creditCard">信用卡</el-radio>
         </el-radio-group>
@@ -87,13 +87,34 @@ const paymentPercentage = ref('');
 const paymentDeadline = ref('');
 
 const props = defineProps({
-  
+  userId: {
+    type: String,
+    required: true,
+  },
+  userPaymentTerm: {
+    type: String,
+    required: true
+  },
+  userPaymentAmount: {
+    type: String,
+    required: true
+  },
+  userPaymentPercentage: {
+    type: String,
+    required: true
+  },
+  userPaymentDeadline: {
+    type: String,
+    required: true
+  }
 });
 
 defineEmits(['remove-card']);
 
 
 </script>
+
+<!------- style ------->
 
 <style scoped>
 

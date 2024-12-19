@@ -89,6 +89,7 @@ const paymentCards = ref([]);
 const addPaymentCard = () => {
   paymentCards.value.push({
     id: `${paymentCards.value.length + 1}`,
+    paymentMethod: true,
     paymentTerm: '',
     paymentMethod: '',
     percentage: '',
