@@ -4,7 +4,7 @@
     <div class="payment-card-header">
       <div class="paymentMethod flex">
         <p class="text-lg font-medium content-center mr-2">支付方式：</p>
-        <el-radio-group >
+        <el-radio-group v-mode="userPaymentMethod" >
           <el-radio value="1" label="cash">現金</el-radio>
           <el-radio value="2" label="creditCard">信用卡</el-radio>
         </el-radio-group>
@@ -32,7 +32,7 @@
         金額（整數）
         </label>
         <el-input 
-          v-model="paymentAmount"
+          v-model="calToalPayment"
           id="payment-amount" 
           class="max-w-60 min-w-60" 
           name="payment-amount" 
@@ -78,18 +78,23 @@
 
 <script setup>
 
-import { ref, defineProps, defineEmits, computed } from 'vue';
+import { ref, watch, defineProps, defineEmits, computed } from 'vue';
 import { Calendar, Search } from '@element-plus/icons-vue'
 
-const paymentMethod = ref('1');
-const paymentAmount = ref('');
-const paymentPercentage = ref('');
-const paymentDeadline = ref('');
+// const paymentMethod = ref('1');
+// const paymentAmount = ref('');
+// const paymentPercentage = ref('');
+// const paymentDeadline = ref('');
 
 const props = defineProps({
   userId: {
     type: String,
     required: true,
+  },
+  userPaymentMethod: {
+    type: String,
+    required: false,
+    default: '1'
   },
   userPaymentTerm: {
     type: String,
@@ -111,6 +116,9 @@ const props = defineProps({
 
 defineEmits(['remove-card']);
 
+const calToalPayment = computed(() => {
+  return props.userPaymentAmount = Number(props.userPaymentAmount);
+});
 
 </script>
 

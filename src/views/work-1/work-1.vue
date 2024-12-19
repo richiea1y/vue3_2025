@@ -26,6 +26,7 @@
       <PaymentCard 
       v-for="(card, index) in paymentCards"
       :key="index"
+      :user-payment-method="card.paymentMethod"
       @remove-card="removePaymentCard(index)"
       />
     </div>
@@ -79,8 +80,12 @@ watch(inputTotalPayment, (newValue) => {
     // 如果輸入為空或無效
     totalPayment.value = 0;
   }
-  
   console.log('實際數值：', totalPayment.value);
+});
+
+
+watch(totalPayment, (newValue) => {
+
 });
 
 
@@ -89,11 +94,11 @@ const paymentCards = ref([]);
 const addPaymentCard = () => {
   paymentCards.value.push({
     id: `${paymentCards.value.length + 1}`,
-    paymentMethod: true,
+    paymentMethod: '1',
+    paymentAmount: '',
+    paymentPercentage: '',
     paymentTerm: '',
-    paymentMethod: '',
-    percentage: '',
-    deadline: '',
+    PaymnetDeadline: '',
   });
 }
 
