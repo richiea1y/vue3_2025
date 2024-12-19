@@ -1,5 +1,4 @@
-#!/usr/bin/env sh
-# 當發生錯誤時終止腳本運行
+# 當發生錯誤時終止腳本
 set -e
 
 # 清除舊的構建文件
@@ -7,6 +6,7 @@ rm -rf dist/
 
 # 打包/構建
 npm run build
+
 # 移動至到打包後的dist目錄
 # 進入構建文件夾
 cd dist
