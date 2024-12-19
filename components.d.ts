@@ -7,10 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-<<<<<<< HEAD
-    ElBadge: typeof import('element-plus/es')['ElBadge']
-=======
->>>>>>> class/day-6-provide-inject
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
@@ -28,10 +24,6 @@ declare module 'vue' {
     ElSpace: typeof import('element-plus/es')['ElSpace']
     ElStep: typeof import('element-plus/es')['ElStep']
     ElSteps: typeof import('element-plus/es')['ElSteps']
-<<<<<<< HEAD
-    ElSwitch: typeof import('element-plus/es')['ElSwitch']
-=======
->>>>>>> class/day-6-provide-inject
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTimeline: typeof import('element-plus/es')['ElTimeline']
     ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
