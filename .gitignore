@@ -32,4 +32,6 @@ coverage
 test-results/
 playwright-report/
 
+deploy.sh
 .env.*
+components.d.ts
