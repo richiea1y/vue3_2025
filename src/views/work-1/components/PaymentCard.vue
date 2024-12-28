@@ -19,6 +19,7 @@
         plain
         class="delete-card-bt" 
         @click="$emit('remove-card')"
+
       >
       </el-button>
     </div>
@@ -78,13 +79,13 @@
 
 <script setup>
 
-import { ref, watch, defineProps, defineEmits, computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { Calendar, Search } from '@element-plus/icons-vue'
 
-// const paymentMethod = ref('1');
-// const paymentAmount = ref('');
-// const paymentPercentage = ref('');
-// const paymentDeadline = ref('');
+const paymentMethod = ref('1');
+const paymentAmount = ref('');
+const paymentPercentage = ref('');
+const paymentDeadline = ref('');
 
 const props = defineProps({
   userId: {
@@ -116,9 +117,7 @@ const props = defineProps({
 
 defineEmits(['remove-card']);
 
-const calToalPayment = computed(() => {
-  return props.userPaymentAmount = Number(props.userPaymentAmount);
-});
+
 
 </script>
 
@@ -141,6 +140,8 @@ const calToalPayment = computed(() => {
   padding: 20px 0;
   gap: 20px; /* 添加間距 */
 }
+
+
 
 
 </style>

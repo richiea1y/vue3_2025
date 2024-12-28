@@ -8,8 +8,8 @@
           type="text"
           size="large"
           placeholder="輸入需支付的總金額"
-          :formatter="formatNumber"
-          :parser="unformatNumber"
+          :formatter="useFormatter.formatNumber"
+          :parser="useFormatter.unformatNumber"
           v-model="inputTotalPayment" 
         />
       </div>
@@ -52,22 +52,22 @@
 
 <script setup>
 import { ref, watch, watchEffect } from 'vue';
-import { Decimal } from 'decimal.js';
 import PaymentCard from './components/PaymentCard.vue';
-import to from 'await-to-js';
+import useFormatter from './composables/useFormatter';
+
 
 const inputTotalPayment = ref('');
 const totalPayment = ref(0);
 
 
-// 將數字轉換為有千位分隔符的格式
-const formatNumber = (num) => {
-  return `$ ${num}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-};
+// // 將數字轉換為有千位分隔符的格式
+// const formatNumber = (num) => {
+//   return `$ ${num}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+// };
 
-const unformatNumber = (str) => {
-  return str.replace(/[^\d]/g, '');
-};
+// const unformatNumber = (str) => {
+//   return str.replace(/[^\d]/g, '');
+// };
 
 watch(inputTotalPayment, (newValue) => {
   // 移除所有非數字字符
@@ -84,16 +84,21 @@ watch(inputTotalPayment, (newValue) => {
 });
 
 
-watch(totalPayment, (newValue) => {
-
-});
-
 
 // Card operation
-const paymentCards = ref([]);
+// 初始化付款資訊
+const paymentCards = ref([
+  {
+    paymentMethod: '1',
+    paymentAmount: '',
+    paymentPercentage: '',
+    paymentTerm: '',
+    PaymnetDeadline: '',
+  }
+]);
+// 新增付款項目卡片
 const addPaymentCard = () => {
   paymentCards.value.push({
-    id: `${paymentCards.value.length + 1}`,
     paymentMethod: '1',
     paymentAmount: '',
     paymentPercentage: '',
