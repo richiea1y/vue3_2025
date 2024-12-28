@@ -9,7 +9,7 @@
 
     <!-- 商品列表 -->
     <div class="grid grid-cols-4 gap-4">
-      <GoodsCard v-for="item in goodsStore.getProducts" :key="item.ID" :goods="item" />
+      <GoodsCard v-for="item in goodsStore.getProducts" :key="item.ID" :goods="item" @click="onRouterChange(item.ID)" />
     </div>
   </div>
 </template>
@@ -19,6 +19,9 @@ import { ref, watch, onMounted, nextTick } from 'vue';
 import GoodsCard from './components/goodsCard.vue';
 import { useGoodsProvider } from './composables/useGoodsProvider';
 import { useGoodsStore } from '@/stores/goods';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const goodsStore = useGoodsStore();
 
@@ -29,6 +32,10 @@ watch([activeType, searchText, specText], ([type, keyword, spec]) => {
   console.log('過濾條件更新：', { type, keyword, spec });
   // 這裡可以觸發你的過濾邏輯
 });
+
+const onRouterChange = id => {
+  router.push({ name: 'goodsDetail', params: { id } });
+};
 
 onMounted(async () => {
   await nextTick();

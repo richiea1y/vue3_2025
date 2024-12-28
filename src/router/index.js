@@ -39,8 +39,17 @@ const routes = [
   {
     path: '/day-7',
     name: 'day-7',
-    component: () => import('../views/day-7/day-7.vue')
+    component: () => import('../views/day-7/day-7.vue'),
   },
+  {
+    path: '/day-7/goods/:id',
+    name: 'goodsDetail',
+    component: () => import('../views/day-7/goodsDetail.vue'),
+    meta: {
+      title: '商品詳細頁面'
+    }
+  },
+
 ]
 
 const router = createRouter({
