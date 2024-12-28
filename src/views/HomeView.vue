@@ -50,6 +50,13 @@ const chapters = [
     route: 'day-6',
     topics: ['provide', 'inject'],
     difficulty: 'intermediate'
+  },
+  {
+    day: 7,
+    title: 'Router動態路由與子路由',
+    route: 'day-7',
+    topics: ['router'],
+    difficulty: 'intermediate'
   }
 ];
 
