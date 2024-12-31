@@ -7,7 +7,7 @@
     <!-- 搜索區域 -->
     <el-form>
       <el-form-item label="搜索使用者">
-        <el-input v-model="searchQuery" placeholder="輸入使用者名稱" :suffix-icon="Search" />
+        <el-input v-model="searchQuery" placeholder="輸入使用者名稱" icon="Search" />
       </el-form-item>
     </el-form>
 
@@ -48,7 +48,6 @@
 
 <script setup>
 import { ref, watch, watchEffect } from 'vue';
-import { Search } from '@element-plus/icons-vue';
 import { onWatcherCleanup } from 'vue';
 
 const searchQuery = ref('');
