@@ -6,10 +6,6 @@ rm -rf dist/
 
 # 打包/構建
 npm run build
-<<<<<<< HEAD
-=======
-
->>>>>>> class/day-7-router-richie
 # 移動至到打包後的dist目錄
 # 進入構建文件夾
 cd dist
