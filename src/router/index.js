@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
 const routes = [
   {
@@ -36,6 +36,20 @@ const routes = [
     name: 'day-6',
     component: () => import('../views/day-6/day-6.vue')
   },
+  {
+    path: '/day-7',
+    name: 'day-7',
+    component: () => import('../views/day-7/day-7.vue'),
+  },
+  {
+    path: '/day-7/goods/:id',
+    name: 'goodsDetail',
+    component: () => import('../views/day-7/goodsDetail.vue'),
+    meta: {
+      title: '商品詳細頁面'
+    }
+  },
+
 ]
 
 const router = createRouter({
