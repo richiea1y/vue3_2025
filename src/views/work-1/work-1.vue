@@ -1,16 +1,30 @@
 <template>
+  <!-- 支付總金額輸入 ＆ 新增支付項目 -->
   <main class="payment-page">
     <div class="header-container">
       <div class="flex">
         <p class="basis-2/3 content-center text-lg font-medium">支付總金額 :</p>
+        <!-- 當我們使用 v-model 時 -->
+        <!-- 
+        <input v-model="searchText" /> 
+        -->
+        
+        <!-- 實際上等同於 -->
+        <!--
+        <input
+          :value="searchText"
+          @input="searchText = $event.target.value"
+        />
+        -->
         <el-input 
           class="w-2 m-2"
           type="text"
           size="large"
-          placeholder="輸入需支付的總金額"
-          :formatter="useFormatter.formatNumber"
-          :parser="useFormatter.unformatNumber"
-          v-model="inputTotalPayment" 
+          :formatter="formatNumber"
+          :parser="unformatNumber"
+          :model-value="displayValue"
+          @input="handlePaymentInput"
+          @blur="handlePaymentBlur"
         />
       </div>
       <el-button 
@@ -22,6 +36,8 @@
         新增支付項目 ＋
       </el-button>
     </div>
+
+    <!-- 子組件：付款資訊 -->
     <div class="card-container">
       <PaymentCard 
       v-for="(card, index) in paymentCards"
@@ -31,6 +47,7 @@
       />
     </div>
     
+    <!-- 總金額、付款次數、剩餘款項 -->
     <div class="footer-container">
       <div class="payment">
         <h2 class="text-lg">已支付金額</h2>
@@ -41,7 +58,7 @@
         <p class="text-lg text-[#bfa965]" >0</p>
       </div>
       <div class="submit-bt">
-        <el-button type="primary" size="large">
+        <el-button type="primary" size="large" disabled>
           確認送出
         </el-button>
       </div>
@@ -51,37 +68,50 @@
 </template>
 
 <script setup>
-import { ref, watch, watchEffect } from 'vue';
+import { ref, computed ,watch, watchEffect } from 'vue';
 import PaymentCard from './components/PaymentCard.vue';
 import useFormatter from './composables/useFormatter';
 
+// 這是 JavaScript 的解構賦值（Destructuring Assignment）語法中的重命名功能
+// 冒號的作用是重命名：
+// * 冒號左邊：是原始名稱（useFormatter 返回的屬性名）
+// * 冒號右邊：是你想要使用的新名稱
 
-const inputTotalPayment = ref('');
-const totalPayment = ref(0);
+const {
+  inputValue: inputTotalPayment,    // 將 inputValue 重命名為 inputTotalPayment
+  displayValue,                     // 保持原名 displayValue
+  actualValue: totalPayment,        // 將 actualValue 重命名為 totalPayment
+  handleInput: handlePaymentInput,  // 將 handleInput 重命名為 handlePaymentInput
+  handleBlur: handlePaymentBlur     // 將 handleBlur 重命名為 handlePaymentBlur
+} = useFormatter('0');
 
+// const inputTotalPayment = ref('0');
+// const totalPayment = ref(0);
 
-// // 將數字轉換為有千位分隔符的格式
-// const formatNumber = (num) => {
-//   return `$ ${num}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+// // 處理輸入格式化邏輯
+// const handlePaymentInput = (event) => {
+//   let value = event.replace(/[^\d]/g, '');
+//   if (!value) {
+//     inputTotalPayment.value = '0';
+//     return;
+//   }
+//   value = value.replace(/^0+/, '');
+//   inputTotalPayment.value = value || '0';
 // };
 
-// const unformatNumber = (str) => {
-//   return str.replace(/[^\d]/g, '');
+// // 處理失焦事件
+// const handlePaymentBlur = () => {
+//   if (!inputTotalPayment.value) {
+//     inputTotalPayment.value = '0';
+//   }
 // };
 
-watch(inputTotalPayment, (newValue) => {
-  // 移除所有非數字字符
-  const plainNumber = Number(newValue);
-  
-  if (plainNumber) {
-    // 更新實際數值
-    totalPayment.value = Number(plainNumber);
-  } else {
-    // 如果輸入為空或無效
-    totalPayment.value = 0;
-  }
-  console.log('實際數值：', totalPayment.value);
-});
+// // 格式化顯示值
+// const displayValue = computed(() => {
+//   const num = inputTotalPayment.value;
+//   return num ? `$ ${formatNumber(num)}` : '$ 0';
+// });
+
 
 
 
