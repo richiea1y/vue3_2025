@@ -61,10 +61,16 @@ export default function useFormatter(initialValue = '0') {
     }
   };
 
+  // 格式化總金額輸入顯示值
+  const displayInputValue = computed(() => {
+    const num = inputValue.value;
+    return num ? `$ ${formatNumber(num)}` : '$ 0';
+  });
+
   // 格式化顯示值
   const displayValue = computed(() => {
     const num = inputValue.value;
-    return num ? `$ ${formatNumber(num)}` : '$ 0';
+    return num ? `${formatNumber(num)}` : '0';
   });
 
   // 實際數值（用於計算）
@@ -74,6 +80,7 @@ export default function useFormatter(initialValue = '0') {
 
   return {
     inputValue,
+    displayInputValue,
     displayValue,
     actualValue,
     handleInput,

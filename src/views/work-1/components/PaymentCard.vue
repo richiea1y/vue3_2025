@@ -4,7 +4,7 @@
     <div class="payment-card-header">
       <div class="paymentMethod flex">
         <p class="text-lg font-medium content-center mr-2">支付方式：</p>
-        <el-radio-group v-mode="userPaymentMethod" >
+        <el-radio-group v-model="userPaymentMethod" >
           <el-radio value="1" label="cash">現金</el-radio>
           <el-radio value="2" label="creditCard">信用卡</el-radio>
         </el-radio-group>
@@ -25,6 +25,7 @@
     </div>
     <!-- Card content -->
     <div class="payment-card-content">
+      <!-- 此項支付金額 -->
       <div class="payment-amount-form flex max-w-sm">
         <label 
           for="payment-amount" 
@@ -32,15 +33,22 @@
         >
         金額（整數）
         </label>
+        <!-- 為什麼 formatter 沒有用？？？ -->
         <el-input 
-          v-model="calToalPayment"
+          v-model="userPaymentAmount"
+          @input="handleInput"
+          @blur="handleBlur"
           id="payment-amount" 
           class="max-w-60 min-w-60" 
           name="payment-amount" 
           type="text" 
-          placeholder="輸入支付金額"
         />
       </div>
+      <div class="amount-hint ml-36">
+          <p class="text-m text-gray-500">缺: {{  }}</p>
+          <p class="text-m text-gray-500">超收: {{  }}</p>
+      </div>
+      <!-- 此項支付金額百分比 -->
       <div class="payment-percentage-form flex max-w-sm">
         <label 
           for="payment-percentage" 
@@ -49,7 +57,7 @@
         所佔百分比
         </label>
         <el-input
-          v-model="paymentPercentage"
+          v-model="userPaymentPercentage"
           id="payment-percentage" 
           class="max-w-60 min-w-60" 
           name="payment-percentage"  
@@ -58,6 +66,7 @@
         />
         <span class="ml-3 content-center">%</span>
       </div>
+      <!-- 此項支付金額截止日期 -->
       <div class="payment-deadline-form flex max-w-sm">
         <label 
           for="payment-deadline" 
@@ -79,46 +88,54 @@
 
 <script setup>
 
-import { ref, watch, computed } from 'vue';
-import { Calendar, Search } from '@element-plus/icons-vue'
+import { ref, nextTick, watch, computed } from 'vue';
+import { Calendar } from '@element-plus/icons-vue'
+import useFormatter from '../composables/useFormatter';
 
-const paymentMethod = ref('1');
-const paymentAmount = ref('');
 const paymentPercentage = ref('');
 const paymentDeadline = ref('');
 
 const props = defineProps({
-  userId: {
-    type: String,
-    required: true,
+  state: {
+    type: Object,
   },
-  userPaymentMethod: {
-    type: String,
-    required: false,
-    default: '1'
-  },
-  userPaymentTerm: {
-    type: String,
-    required: true
-  },
-  userPaymentAmount: {
-    type: String,
-    required: true
-  },
-  userPaymentPercentage: {
-    type: String,
-    required: true
-  },
-  userPaymentDeadline: {
-    type: String,
-    required: true
-  }
+});
+
+const userPaymentMethod = defineModel('userPaymentMethod', {
+  type: String,
+});
+
+const userPaymentAmount = defineModel('userPaymentAmount', {
+  type: String,
+});
+
+const userPaymentPercentage = defineModel('userPaymentPercentage', {
+  type: String,
+  default: '0',
 });
 
 defineEmits(['remove-card']);
 
+const {
+  inputValue,
+  displayValue,
+  actualValue: singlePayment,
+  handleInput,
+  handleBlur
+} = useFormatter('0');
 
+watch(inputValue, (newValue) => {
+  singlePayment.value = newValue;
+  // 這裡要把值傳到父元件，但是為什麼會有延遲？？？
+  userPaymentAmount.value = newValue;
+  console.log('newValue:', newValue);
+  console.log('singlePayment.value:', singlePayment.value);
+  console.log('userPaymentAmount.value:', userPaymentAmount.value);
+});
 
+watch(userPaymentAmount, () => {
+  userPaymentPercentage = userPaymentAmount/state.value.total
+})
 </script>
 
 <!------- style ------->

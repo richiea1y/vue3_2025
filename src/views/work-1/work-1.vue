@@ -20,9 +20,7 @@
           class="w-2 m-2"
           type="text"
           size="large"
-          :formatter="formatNumber"
-          :parser="unformatNumber"
-          :model-value="displayValue"
+          :model-value="displayInputValue"
           @input="handlePaymentInput"
           @blur="handlePaymentBlur"
         />
@@ -42,7 +40,10 @@
       <PaymentCard 
       v-for="(card, index) in paymentCards"
       :key="index"
-      :user-payment-method="card.paymentMethod"
+      :state="state"
+      v-model:user-payment-method="card.paymentMethod"
+      v-model:user-payment-amount="card.paymentAmount"
+      v-model:user-payment-percentage="card.paymentPercentage"
       @remove-card="removePaymentCard(index)"
       />
     </div>
@@ -71,6 +72,7 @@
 import { ref, computed ,watch, watchEffect } from 'vue';
 import PaymentCard from './components/PaymentCard.vue';
 import useFormatter from './composables/useFormatter';
+import useCalAmount from './composables/useCalAmount';
 
 // 這是 JavaScript 的解構賦值（Destructuring Assignment）語法中的重命名功能
 // 冒號的作用是重命名：
@@ -78,50 +80,33 @@ import useFormatter from './composables/useFormatter';
 // * 冒號右邊：是你想要使用的新名稱
 
 const {
-  inputValue: inputTotalPayment,    // 將 inputValue 重命名為 inputTotalPayment
-  displayValue,                     // 保持原名 displayValue
+  displayInputValue,                     // 保持原名 displayValue
   actualValue: totalPayment,        // 將 actualValue 重命名為 totalPayment
   handleInput: handlePaymentInput,  // 將 handleInput 重命名為 handlePaymentInput
   handleBlur: handlePaymentBlur     // 將 handleBlur 重命名為 handlePaymentBlur
 } = useFormatter('0');
 
-// const inputTotalPayment = ref('0');
-// const totalPayment = ref(0);
+const state = ref({
+  total: '', // 總金額
+  cardlist: [],
+  paymentFinished: false, // 是否付清總金額
+  currentPayment: '', // 當前付款金額
+  overPayment: '', // 要付金額之差額
+  overPercentage: '', // 要付金額之百分比
+  payState: '', //試算當前所有輸入框裡所有金額之付款狀態
+})
 
-// // 處理輸入格式化邏輯
-// const handlePaymentInput = (event) => {
-//   let value = event.replace(/[^\d]/g, '');
-//   if (!value) {
-//     inputTotalPayment.value = '0';
-//     return;
-//   }
-//   value = value.replace(/^0+/, '');
-//   inputTotalPayment.value = value || '0';
-// };
-
-// // 處理失焦事件
-// const handlePaymentBlur = () => {
-//   if (!inputTotalPayment.value) {
-//     inputTotalPayment.value = '0';
-//   }
-// };
-
-// // 格式化顯示值
-// const displayValue = computed(() => {
-//   const num = inputTotalPayment.value;
-//   return num ? `$ ${formatNumber(num)}` : '$ 0';
-// });
-
-
-
+watchEffect(() => {
+  state.value.total = totalPayment.value;
+})
 
 // Card operation
 // 初始化付款資訊
 const paymentCards = ref([
   {
     paymentMethod: '1',
-    paymentAmount: '',
-    paymentPercentage: '',
+    paymentAmount: '0',
+    paymentPercentage: '0',
     paymentTerm: '',
     PaymnetDeadline: '',
   }
@@ -130,27 +115,20 @@ const paymentCards = ref([
 const addPaymentCard = () => {
   paymentCards.value.push({
     paymentMethod: '1',
-    paymentAmount: '',
-    paymentPercentage: '',
+    paymentAmount: '0',
+    paymentPercentage: '0',
     paymentTerm: '',
     PaymnetDeadline: '',
   });
 }
 
+
 const removePaymentCard = (index) => {
   paymentCards.value.splice(index, 1);
 }
 
-// const removePaymentCard = (id) => {
-//   const index = paymentCard.value.findIndex((card) => card.id === id);
-//   paymentCard.value.splice(index, 1);
-// }
-// console.log(Date.now());
 
 </script>
-
-
-
 
 <style scoped>
 .payment-page {
