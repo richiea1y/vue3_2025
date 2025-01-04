@@ -35,7 +35,7 @@
         </label>
         <!-- 為什麼 formatter 沒有用？？？ -->
         <el-input 
-          v-model="userPaymentAmount"
+          v-model="inputValue"
           @input="handleInput"
           @blur="handleBlur"
           id="payment-amount" 
@@ -57,7 +57,7 @@
         所佔百分比
         </label>
         <el-input
-          v-model="userPaymentPercentage"
+          v-model="Percentage"
           id="payment-percentage" 
           class="max-w-60 min-w-60" 
           name="payment-percentage"  
@@ -124,18 +124,22 @@ const {
   handleBlur
 } = useFormatter('0');
 
+// 監聽 inputValue 的變化，並將值傳到父元件，更新 paymentAmount
 watch(inputValue, (newValue) => {
-  singlePayment.value = newValue;
-  // 這裡要把值傳到父元件，但是為什麼會有延遲？？？
-  userPaymentAmount.value = newValue;
+  if (newValue !== inputValue.value) {
+    userPaymentAmount.value = newValue;
+  }
   console.log('newValue:', newValue);
   console.log('singlePayment.value:', singlePayment.value);
+  // 這裡要把值傳到父元件，但是為什麼會有延遲？？？
   console.log('userPaymentAmount.value:', userPaymentAmount.value);
 });
 
-watch(userPaymentAmount, () => {
-  userPaymentPercentage = userPaymentAmount/state.value.total
-})
+const Percentage = computed(() => {
+  const paymentPercentage = userPaymentPercentage.value / props.state.total;
+  return paymentPercentage || 0;
+});
+
 </script>
 
 <!------- style ------->

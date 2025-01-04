@@ -87,7 +87,7 @@ const {
 } = useFormatter('0');
 
 const state = ref({
-  total: '', // 總金額
+  total: 0, // 總金額
   cardlist: [],
   paymentFinished: false, // 是否付清總金額
   currentPayment: '', // 當前付款金額
