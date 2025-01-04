@@ -49,6 +49,11 @@ const routes = [
       title: '商品詳細頁面'
     }
   },
+  {
+    path: '/day-8',
+    name: 'day-8',
+    component: () => import('../views/day-8/day-8.vue'),
+  },
 
 ]
 
