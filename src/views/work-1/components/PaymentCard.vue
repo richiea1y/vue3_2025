@@ -3,7 +3,7 @@
     <!-- Card header -->
     <div class="payment-card-header">
       <div class="paymentMethod flex">
-        <p class="text-lg font-medium content-center mr-2">支付方式： {{ state.total }}</p>
+        <p class="text-lg font-medium content-center mr-2">支付方式：</p>
         <el-radio-group v-model="userPaymentMethod">
           <el-radio value="1" label="cash">現金</el-radio>
           <el-radio value="2" label="creditCard">信用卡</el-radio>
@@ -29,15 +29,15 @@
           type="text"
         />
       </div>
-      <div class="amount-hint ml-36">
-        <p v-if="needToPay > 0" class="text-m text-gray-500">缺: {{ needToPay }}</p>
-        <p v-if="needToSub < 0" class="text-m text-gray-500">超收: {{ needToSub }}</p>
+      <div class="amount-hint ml-36 -my-2">
+        <p v-if="needToPay > 0" class="text-s text-gray-500">缺: {{ needToPay }} ({{ needToPayPercentage }} %)</p>
+        <p v-if="needToSub < 0" class="text-s text-gray-500">超收: {{ needToSub }}</p>
       </div>
       <!-- 此項支付金額百分比 -->
       <div class="payment-percentage-form flex max-w-sm">
         <label for="payment-percentage" class="mx-5 my-3 content-center min-w-24"> 所佔百分比 </label>
         <el-input
-          v-model="Percentage"
+          v-model="paymentPercentage"
           id="payment-percentage"
           class="max-w-60 min-w-60"
           name="payment-percentage"
@@ -63,6 +63,7 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue';
+import Decimal from 'decimal.js';
 import { Calendar } from '@element-plus/icons-vue';
 import usePayments from '../composables/usePayments';
 
@@ -74,14 +75,29 @@ const props = defineProps({
 });
 
 const paymentAmount = ref(0);
-const paymentPercentage = ref('');
 const paymentDeadline = ref('');
 
+// 支付項目內容
 const needToPay = computed(() => {
   return props.state.total - paymentAmount.value;
 });
+
+const needToPayPercentage = computed(() => {
+  const needToPayPercentageCal = new Decimal(needToPay.value).div(props.state.total).times(100).toFixed(6);
+  return needToPayPercentageCal;
+});
+
 const needToSub = computed(() => {
   return props.state.total - paymentAmount.value;
+});
+
+const paymentPercentage = computed(() => {
+  // 如果支付金額為空，則返回 0
+  if (!paymentAmount.value) {
+    return 0;
+  }
+  const percentageCal = new Decimal(paymentAmount.value).div(props.state.total).times(100).toFixed(6);
+  return percentageCal;
 });
 
 const userPaymentMethod = defineModel('userPaymentMethod', {
@@ -105,11 +121,6 @@ watch(
 );
 
 defineEmits(['remove-card']);
-
-const Percentage = computed(() => {
-  const percentageCal = userPaymentPercentage.value / props.state.total;
-  return percentageCal || 0;
-});
 </script>
 
 <!------- style ------->

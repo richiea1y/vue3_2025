@@ -1,9 +1,17 @@
-import { ref, computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 
 export default function usePayments(prop, emit) {
-  const state = ref({
+  const state = reactive({
     total: 0, // 總金額
-    cardList: [],
+    cardList: [
+      {
+        paymentMethod: '1',
+        paymentAmount: '0',
+        paymentPercentage: '0',
+        paymentTerm: '',
+        PaymnetDeadline: ''
+      }
+    ],
     paymentFinished: false, // 是否付清總金額
     currentPayment: '', // 當前付款金額
     overPayment: '', // 要付金額之差額
@@ -11,7 +19,23 @@ export default function usePayments(prop, emit) {
     payState: '', //試算當前所有輸入框裡所有金額之付款狀態
   })
 
+  const addCard = () => {
+    state.cardList.push({
+      paymentMethod: '1',
+      paymentAmount: '0',
+      paymentPercentage: '0',
+      paymentTerm: '',
+      PaymnetDeadline: ''
+    })
+  }
+
+  const removeCard = (index) => {
+    state.cardList.splice(index, 1)
+  }
+
   return {
-    state
+    state,
+    addCard,
+    removeCard
   }
 }

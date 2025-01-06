@@ -16,19 +16,19 @@
         -->
         <el-input class="w-2 m-2" type="text" size="large" v-model="state.total" @change="onTotalPaymentChange" />
       </div>
-      <el-button size="large" color="#000" plain @click="addPaymentCard"> 新增支付項目 ＋ </el-button>
+      <el-button size="large" color="#000" plain @click="addCard"> 新增支付項目 ＋ </el-button>
     </div>
 
     <!-- 子組件：付款資訊 -->
     <div class="card-container">
       <PaymentCard
-        v-for="(card, index) in paymentCards"
+        v-for="(card, index) in state.cardList"
         :key="index"
         :state="state"
         v-model:user-payment-method="card.paymentMethod"
         v-model:user-payment-amount="card.paymentAmount"
         v-model:user-payment-percentage="card.paymentPercentage"
-        @remove-card="removePaymentCard(index)"
+        @remove-card="removeCard(index)"
       />
     </div>
 
@@ -59,36 +59,10 @@ import usePayments from './composables/usePayments';
 // * 冒號左邊：是原始名稱（useFormatter 返回的屬性名）
 // * 冒號右邊：是你想要使用的新名稱
 
-const { state } = usePayments();
-
-// Card operation
-// 初始化付款資訊
-const paymentCards = ref([
-  {
-    paymentMethod: '1',
-    paymentAmount: '0',
-    paymentPercentage: '0',
-    paymentTerm: '',
-    PaymnetDeadline: ''
-  }
-]);
-// 新增付款項目卡片
-const addPaymentCard = () => {
-  paymentCards.value.push({
-    paymentMethod: '1',
-    paymentAmount: '0',
-    paymentPercentage: '0',
-    paymentTerm: '',
-    PaymnetDeadline: ''
-  });
-};
-
-const removePaymentCard = index => {
-  paymentCards.value.splice(index, 1);
-};
+const { state, addCard, removeCard } = usePayments();
 
 const onTotalPaymentChange = () => {
-  console.log('### totalPayment:', state.value.total);
+  console.log('### totalPayment:', state.total);
 };
 </script>
 
