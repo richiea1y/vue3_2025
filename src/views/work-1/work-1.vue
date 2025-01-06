@@ -5,10 +5,8 @@
       <div class="flex">
         <p class="basis-2/3 content-center text-lg font-medium">支付總金額 :</p>
         <!-- 當我們使用 v-model 時 -->
-        <!-- 
-        <input v-model="searchText" /> 
-        -->
-        
+        <!-- <input v-model="searchText" /> -->
+
         <!-- 實際上等同於 -->
         <!--
         <input
@@ -16,38 +14,21 @@
           @input="searchText = $event.target.value"
         />
         -->
-        <el-input 
-          class="w-2 m-2"
-          type="text"
-          size="large"
-          :model-value="displayInputValue"
-          @input="handlePaymentInput"
-          @blur="handlePaymentBlur"
-        />
+        <el-input class="w-2 m-2" type="text" size="large" :model-value="displayInputValue" @input="handlePaymentInput"
+          @blur="handlePaymentBlur" />
       </div>
-      <el-button 
-        size="large"
-        color="#000"
-        plain
-        @click="addPaymentCard"
-      >
+      <el-button size="large" color="#000" plain @click="addPaymentCard">
         新增支付項目 ＋
       </el-button>
     </div>
 
     <!-- 子組件：付款資訊 -->
     <div class="card-container">
-      <PaymentCard 
-      v-for="(card, index) in paymentCards"
-      :key="index"
-      :state="state"
-      v-model:user-payment-method="card.paymentMethod"
-      v-model:user-payment-amount="card.paymentAmount"
-      v-model:user-payment-percentage="card.paymentPercentage"
-      @remove-card="removePaymentCard(index)"
-      />
+      <PaymentCard v-for="(card, index) in paymentCards" :key="index" :state="state"
+        v-model:user-payment-method="card.paymentMethod" v-model:user-payment-amount="card.paymentAmount"
+        v-model:user-payment-percentage="card.paymentPercentage" @remove-card="removePaymentCard(index)" />
     </div>
-    
+
     <!-- 總金額、付款次數、剩餘款項 -->
     <div class="footer-container">
       <div class="payment">
@@ -56,7 +37,7 @@
       </div>
       <div class="total-remain-balance">
         <h2 class="text-lg">付款次數 / 剩餘款項</h2>
-        <p class="text-lg text-[#bfa965]" >0</p>
+        <p class="text-lg text-[#bfa965]">0</p>
       </div>
       <div class="submit-bt">
         <el-button type="primary" size="large" disabled>
@@ -65,11 +46,11 @@
       </div>
     </div>
   </main>
-  
+
 </template>
 
 <script setup>
-import { ref, computed ,watch, watchEffect } from 'vue';
+import { ref, computed, watch, watchEffect } from 'vue';
 import PaymentCard from './components/PaymentCard.vue';
 import useFormatter from './composables/useFormatter';
 import useCalAmount from './composables/useCalAmount';
@@ -87,17 +68,13 @@ const {
 } = useFormatter('0');
 
 const state = ref({
-  total: 0, // 總金額
-  cardlist: [],
+  totalAmount: 0, // 總金額
+  cardList: [],
   paymentFinished: false, // 是否付清總金額
   currentPayment: '', // 當前付款金額
   overPayment: '', // 要付金額之差額
   overPercentage: '', // 要付金額之百分比
   payState: '', //試算當前所有輸入框裡所有金額之付款狀態
-})
-
-watchEffect(() => {
-  state.value.total = totalPayment.value;
 })
 
 // Card operation
@@ -158,7 +135,7 @@ const removePaymentCard = (index) => {
   padding: 5px;
   border: 1px solid #000;
   border-radius: 5px;
-  margin: 5px ;
+  margin: 5px;
   text-align: center;
   margin-left: 10px;
 }
@@ -182,4 +159,4 @@ const removePaymentCard = (index) => {
   border-radius: 5px;
   cursor: pointer;
 } */
-</style> 
+</style>

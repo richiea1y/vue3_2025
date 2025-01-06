@@ -90,7 +90,6 @@
 
 import { ref, nextTick, watch, computed } from 'vue';
 import { Calendar } from '@element-plus/icons-vue'
-import useFormatter from '../composables/useFormatter';
 
 const paymentPercentage = ref('');
 const paymentDeadline = ref('');
@@ -116,29 +115,6 @@ const userPaymentPercentage = defineModel('userPaymentPercentage', {
 
 defineEmits(['remove-card']);
 
-const {
-  inputValue,
-  displayValue,
-  actualValue: singlePayment,
-  handleInput,
-  handleBlur
-} = useFormatter('0');
-
-// 監聽 inputValue 的變化，並將值傳到父元件，更新 paymentAmount
-watch(inputValue, (newValue) => {
-  if (newValue !== inputValue.value) {
-    userPaymentAmount.value = newValue;
-  }
-  console.log('newValue:', newValue);
-  console.log('singlePayment.value:', singlePayment.value);
-  // 這裡要把值傳到父元件，但是為什麼會有延遲？？？
-  console.log('userPaymentAmount.value:', userPaymentAmount.value);
-});
-
-const Percentage = computed(() => {
-  const paymentPercentage = userPaymentPercentage.value / props.state.total;
-  return paymentPercentage || 0;
-});
 
 </script>
 
