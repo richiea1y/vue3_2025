@@ -14,19 +14,22 @@
           @input="searchText = $event.target.value"
         />
         -->
-        <el-input class="w-2 m-2" type="text" size="large" :model-value="displayInputValue" @input="handlePaymentInput"
-          @blur="handlePaymentBlur" />
+        <el-input class="w-2 m-2" type="text" size="large" v-model="state.total" @change="onTotalPaymentChange" />
       </div>
-      <el-button size="large" color="#000" plain @click="addPaymentCard">
-        新增支付項目 ＋
-      </el-button>
+      <el-button size="large" color="#000" plain @click="addPaymentCard"> 新增支付項目 ＋ </el-button>
     </div>
 
     <!-- 子組件：付款資訊 -->
     <div class="card-container">
-      <PaymentCard v-for="(card, index) in paymentCards" :key="index" :state="state"
-        v-model:user-payment-method="card.paymentMethod" v-model:user-payment-amount="card.paymentAmount"
-        v-model:user-payment-percentage="card.paymentPercentage" @remove-card="removePaymentCard(index)" />
+      <PaymentCard
+        v-for="(card, index) in paymentCards"
+        :key="index"
+        :state="state"
+        v-model:user-payment-method="card.paymentMethod"
+        v-model:user-payment-amount="card.paymentAmount"
+        v-model:user-payment-percentage="card.paymentPercentage"
+        @remove-card="removePaymentCard(index)"
+      />
     </div>
 
     <!-- 總金額、付款次數、剩餘款項 -->
@@ -40,42 +43,23 @@
         <p class="text-lg text-[#bfa965]">0</p>
       </div>
       <div class="submit-bt">
-        <el-button type="primary" size="large" disabled>
-          確認送出
-        </el-button>
+        <el-button type="primary" size="large" disabled> 確認送出 </el-button>
       </div>
     </div>
   </main>
-
 </template>
 
 <script setup>
 import { ref, computed, watch, watchEffect } from 'vue';
 import PaymentCard from './components/PaymentCard.vue';
-import useFormatter from './composables/useFormatter';
-import useCalAmount from './composables/useCalAmount';
+import usePayments from './composables/usePayments';
 
 // 這是 JavaScript 的解構賦值（Destructuring Assignment）語法中的重命名功能
 // 冒號的作用是重命名：
 // * 冒號左邊：是原始名稱（useFormatter 返回的屬性名）
 // * 冒號右邊：是你想要使用的新名稱
 
-const {
-  displayInputValue,                     // 保持原名 displayValue
-  actualValue: totalPayment,        // 將 actualValue 重命名為 totalPayment
-  handleInput: handlePaymentInput,  // 將 handleInput 重命名為 handlePaymentInput
-  handleBlur: handlePaymentBlur     // 將 handleBlur 重命名為 handlePaymentBlur
-} = useFormatter('0');
-
-const state = ref({
-  totalAmount: 0, // 總金額
-  cardList: [],
-  paymentFinished: false, // 是否付清總金額
-  currentPayment: '', // 當前付款金額
-  overPayment: '', // 要付金額之差額
-  overPercentage: '', // 要付金額之百分比
-  payState: '', //試算當前所有輸入框裡所有金額之付款狀態
-})
+const { state } = usePayments();
 
 // Card operation
 // 初始化付款資訊
@@ -85,7 +69,7 @@ const paymentCards = ref([
     paymentAmount: '0',
     paymentPercentage: '0',
     paymentTerm: '',
-    PaymnetDeadline: '',
+    PaymnetDeadline: ''
   }
 ]);
 // 新增付款項目卡片
@@ -95,16 +79,17 @@ const addPaymentCard = () => {
     paymentAmount: '0',
     paymentPercentage: '0',
     paymentTerm: '',
-    PaymnetDeadline: '',
+    PaymnetDeadline: ''
   });
-}
+};
 
-
-const removePaymentCard = (index) => {
+const removePaymentCard = index => {
   paymentCards.value.splice(index, 1);
-}
+};
 
-
+const onTotalPaymentChange = () => {
+  console.log('### totalPayment:', state.value.total);
+};
 </script>
 
 <style scoped>
@@ -129,7 +114,6 @@ const removePaymentCard = (index) => {
   align-items: center;
   padding: 2rem 10px 1rem;
 }
-
 
 .header-container input {
   padding: 5px;
