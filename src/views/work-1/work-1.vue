@@ -23,7 +23,7 @@
     <div class="card-container">
       <PaymentCard
         v-for="(card, index) in state.cardList"
-        :key="index"
+        :key="card.id"
         :state="state"
         :card-data="card"
         v-model:user-payment-method="card.paymentMethod"
@@ -42,7 +42,7 @@
       </div>
       <div class="total-remain-balance">
         <h2 class="text-lg">付款次數 / 剩餘款項</h2>
-        <p class="text-lg text-[#bfa965]">0</p>
+        <p class="text-lg text-[#bfa965]">{{ state.cardList.length }}</p>
       </div>
       <div class="submit-bt">
         <el-button type="primary" size="large" disabled> 確認送出 </el-button>

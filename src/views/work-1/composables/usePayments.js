@@ -9,6 +9,7 @@ export default function usePayments(prop, emit) {
     total: 0, // 總金額
     cardList: [
       {
+        id: Date.now(),
         paymentMethod: '1',
         paymentAmount: '0',
         paymentPercentage: '0',
@@ -26,6 +27,7 @@ export default function usePayments(prop, emit) {
 
   const addCard = () => {
     state.cardList.unshift({
+      id: Date.now(),
       paymentMethod: '1',
       paymentAmount: '0',
       paymentPercentage: '0',
@@ -43,6 +45,7 @@ export default function usePayments(prop, emit) {
     state.cardList[index].paymentConfirm = true
     console.log(`### Payment Card ${index}: `)
     console.log(state.cardList[index])
+    console.log(state.cardList)
   }
 
   return {
