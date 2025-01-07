@@ -1,6 +1,10 @@
 import { ref, reactive, computed } from 'vue'
 
 export default function usePayments(prop, emit) {
+  // Use reactive instead of ref for nested objects
+  // ref wraps the value in a .value property
+  // For nested objects, ref creates a reactive wrapper only at the top level 
+  // reactive creates deep reactivity for all nested properties
   const state = reactive({
     total: 0, // 總金額
     cardList: [
@@ -9,6 +13,7 @@ export default function usePayments(prop, emit) {
         paymentAmount: '0',
         paymentPercentage: '0',
         paymentTerm: '',
+        paymentConfirm: false,
         PaymnetDeadline: ''
       }
     ],
@@ -25,6 +30,7 @@ export default function usePayments(prop, emit) {
       paymentAmount: '0',
       paymentPercentage: '0',
       paymentTerm: '',
+      paymentConfirm: false,
       PaymnetDeadline: ''
     })
   }
@@ -33,9 +39,16 @@ export default function usePayments(prop, emit) {
     state.cardList.splice(index, 1)
   }
 
+  const confirmCard = (index) => {
+    state.cardList[index].paymentConfirm = true
+    console.log(`### Payment Card ${index}: `)
+    console.log(state.cardList[index])
+  }
+
   return {
     state,
     addCard,
-    removeCard
+    removeCard,
+    confirmCard
   }
 }

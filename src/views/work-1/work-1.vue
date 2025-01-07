@@ -25,10 +25,12 @@
         v-for="(card, index) in state.cardList"
         :key="index"
         :state="state"
+        :card-data="card"
         v-model:user-payment-method="card.paymentMethod"
         v-model:user-payment-amount="card.paymentAmount"
         v-model:user-payment-percentage="card.paymentPercentage"
         @remove-card="removeCard(index)"
+        @confirm-card="confirmCard(index)"
       />
     </div>
 
@@ -59,7 +61,7 @@ import usePayments from './composables/usePayments';
 // * 冒號左邊：是原始名稱（useFormatter 返回的屬性名）
 // * 冒號右邊：是你想要使用的新名稱
 
-const { state, addCard, removeCard } = usePayments();
+const { state, addCard, removeCard, confirmCard } = usePayments();
 
 const onTotalPaymentChange = () => {
   console.log('### totalPayment:', state.total);

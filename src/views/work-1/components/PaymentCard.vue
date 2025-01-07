@@ -10,10 +10,10 @@
         </el-radio-group>
       </div>
       <div class="remain-balance flex">
-        <p class="content-center mr-4">未付款</p>
-        <el-button color="#90aad4" plain icon="Check">確認付款</el-button>
+        <p class="content-center mr-4">{{ props.cardData.paymentConfirm ? '已付款' : '未付款' }}</p>
+        <el-button color="#90aad4" icon="Check" @click="$emit('confirm-card')">確認付款</el-button>
       </div>
-      <el-button type="danger" circle icon="CloseBold" plain class="delete-card-bt" @click="$emit('remove-card')">
+      <el-button type="danger" circle icon="CloseBold" class="delete-card-bt" @click="$emit('remove-card')">
       </el-button>
     </div>
     <!-- Card content -->
@@ -65,12 +65,17 @@
 import { ref, watch, computed } from 'vue';
 import Decimal from 'decimal.js';
 import { Calendar } from '@element-plus/icons-vue';
-import usePayments from '../composables/usePayments';
-
+// import usePayments from '../composables/usePayments';
 // const { state } = usePayments();
+
 const props = defineProps({
   state: {
     type: Object
+  },
+  cardData: {
+    // 新增這個 prop
+    type: Object,
+    required: true
   }
 });
 
@@ -120,7 +125,7 @@ watch(
   }
 );
 
-defineEmits(['remove-card']);
+defineEmits(['remove-card', 'confirm-card']);
 </script>
 
 <!------- style ------->
