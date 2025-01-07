@@ -25,7 +25,7 @@ export default function usePayments(prop, emit) {
   })
 
   const addCard = () => {
-    state.cardList.push({
+    state.cardList.unshift({
       paymentMethod: '1',
       paymentAmount: '0',
       paymentPercentage: '0',
