@@ -4,14 +4,14 @@
     <div class="payment-card-header">
       <div class="paymentMethod flex">
         <p class="text-lg font-medium content-center mr-2">支付方式：</p>
-        <el-radio-group v-model="userPaymentMethod">
+        <el-radio-group v-model="localPaymentMethod">
           <el-radio value="1" label="cash">現金</el-radio>
           <el-radio value="2" label="creditCard">信用卡</el-radio>
         </el-radio-group>
       </div>
       <div class="remain-balance flex">
         <p class="content-center mr-4">{{ props.cardData.paymentConfirm ? '已付款' : '未付款' }}</p>
-        <el-button color="#90aad4" icon="Check" @click="$emit('confirm-card')">確認付款</el-button>
+        <el-button color="#90aad4" icon="Check" @click="handleConfirmPayment">確認付款</el-button>
       </div>
       <el-button type="danger" circle icon="CloseBold" class="delete-card-bt" @click="$emit('remove-card')">
       </el-button>
@@ -22,7 +22,7 @@
       <div class="payment-amount-form flex max-w-sm">
         <label for="payment-amount" class="mx-5 my-3 content-center min-w-24"> 金額（整數） </label>
         <el-input
-          v-model="paymentAmount"
+          v-model="localPaymentAmount"
           id="payment-amount"
           class="max-w-60 min-w-60"
           name="payment-amount"
@@ -50,11 +50,11 @@
       <div class="payment-deadline-form flex max-w-sm">
         <label for="payment-deadline" class="mx-5 my-3 content-center min-w-24"> 最晚付款日 </label>
         <el-input
-          v-model="paymentDeadline"
           id="payment-deadline"
           class="max-w-60 min-w-60"
           name="payment-deadline"
           :suffix-icon="Calendar"
+          disabled
         />
       </div>
     </div>
@@ -80,11 +80,13 @@ const props = defineProps({
 });
 
 const paymentAmount = ref(0);
-const paymentDeadline = ref('');
+
+const localPaymentMethod = ref(props.cardData.paymentMethod || '1');
+const localPaymentAmount = ref(props.cardData.paymentAmount);
 
 // 支付項目內容
 const needToPay = computed(() => {
-  return props.state.total - paymentAmount.value;
+  return props.state.total - localPaymentAmount.value;
 });
 
 const needToPayPercentage = computed(() => {
@@ -93,30 +95,26 @@ const needToPayPercentage = computed(() => {
 });
 
 const needToSub = computed(() => {
-  return props.state.total - paymentAmount.value;
+  return props.state.total - localPaymentAmount.value;
 });
 
 const paymentPercentage = computed(() => {
   // 如果支付金額為空，則返回 0
-  if (!paymentAmount.value) {
+  if (!localPaymentAmount.value) {
     return 0;
   }
-  const percentageCal = new Decimal(paymentAmount.value).div(props.state.total).times(100).toFixed(6);
+  const percentageCal = new Decimal(localPaymentAmount.value).div(props.state.total).times(100).toFixed(6);
   return percentageCal;
 });
 
-const userPaymentMethod = defineModel('userPaymentMethod', {
-  type: String
-});
-
-const userPaymentAmount = defineModel('userPaymentAmount', {
-  type: String
-});
-
-const userPaymentPercentage = defineModel('userPaymentPercentage', {
-  type: String,
-  default: '0'
-});
+const handleConfirmPayment = () => {
+  emit('confirm-payment', {
+    paymentAmount: localPaymentAmount.value,
+    paymentMethod: localPaymentMethod.value,
+    paymentConfirm: true
+  });
+  console.table('### confirm data' + props.cardData);
+};
 
 watch(
   () => props.state,
@@ -125,7 +123,7 @@ watch(
   }
 );
 
-defineEmits(['remove-card', 'confirm-card']);
+const emit = defineEmits(['remove-card', 'confirm-card']);
 </script>
 
 <!------- style ------->
