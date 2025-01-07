@@ -37,7 +37,7 @@
     <div class="footer-container">
       <div class="payment">
         <h2 class="text-lg">已支付金額</h2>
-        <p class="text-lg text-[#bfa965]">0</p>
+        <p class="text-lg text-[#bfa965]">{{ state.currentPayment }}</p>
       </div>
       <div class="total-remain-balance">
         <h2 class="text-lg">付款次數 / 剩餘款項</h2>
