@@ -22,13 +22,14 @@
     <!-- 子組件：付款資訊 -->
     <div class="card-container">
       <PaymentCard
-        v-for="(card, index) in state.cardList"
+        v-for="card in paymentCards"
         :key="card.id"
         :state="state"
         :card-data="card"
-        :card-index="index"
-        @remove-card="removeCard(index)"
-        @confirm-payment="updateCardPayment(index, $event)"
+        :card-index="card.paymentCardIndex"
+        @remove-card="removeCard(card.paymentCardIndex)"
+        @update-amount="updateAmount"
+        @update-payment-method="updatePaymentMethod"
       />
       <!--                                   ↑        ↑           -->
       <!--                                 索引值   子組件發送的資料 -->
@@ -38,12 +39,12 @@
     <div class="footer-container">
       <div class="payment">
         <h2 class="text-lg">已支付金額</h2>
-        <p class="text-lg text-[#bfa965]">{{ state.currentPayment }}</p>
+        <p class="text-lg text-[#bfa965]">{{ alreadypaid || 0 }}</p>
       </div>
       <div class="total-remain-balance">
         <h2 class="text-lg">付款次數 / 剩餘款項</h2>
         <p class="text-lg text-[#bfa965]">
-          {{ state.cardList.filter(card => card.paymentConfirm).length }} / {{ state.cardList.length }}
+          {{ paymentCards.filter(card => card.paymentConfirm).length }} / {{ paymentCards.length }}
         </p>
       </div>
       <div class="submit-bt">
@@ -63,7 +64,13 @@ import usePayments from './composables/usePayments';
 // * 冒號左邊：是原始名稱（useFormatter 返回的屬性名）
 // * 冒號右邊：是你想要使用的新名稱
 
-const { state, addCard, removeCard, updateCardPayment } = usePayments();
+const { state, paymentCards, addCard, removeCard, updateAmount, updatePaymentMethod } = usePayments();
+
+const alreadypaid = computed(() => {
+  if (paymentCards.paymentFinished) {
+    return currentPayment;
+  }
+});
 
 const onTotalPaymentChange = () => {
   console.log('### totalPayment:', state.total);

@@ -4,7 +4,7 @@
     <div class="payment-card-header">
       <div class="paymentMethod flex">
         <p class="text-lg font-medium content-center mr-2">支付方式：</p>
-        <el-radio-group v-model="localPaymentMethod">
+        <el-radio-group v-model="localPaymentMethod" @change="handlePaymentMethodChange">
           <el-radio value="1" label="cash">現金</el-radio>
           <el-radio value="2" label="creditCard">信用卡</el-radio>
         </el-radio-group>
@@ -31,6 +31,7 @@
         <label for="payment-amount" class="mx-5 my-3 content-center min-w-24"> 金額（整數） </label>
         <el-input
           v-model="localPaymentAmount"
+          @input="handleAmountChange"
           id="payment-amount"
           class="max-w-60 min-w-60"
           name="payment-amount"
@@ -97,12 +98,13 @@ const localPaymentAmount = ref(props.cardData.paymentAmount);
 
 // 支付項目內容
 const needToPay = computed(() => {
-  return props.state.total - localPaymentAmount.value;
+  if (!props.state.currentPayment) return 0;
+  return props.state.total - props.state.currentPayment;
 });
 
 const needToPayPercentage = computed(() => {
-  const needToPayPercentageCal = new Decimal(needToPay.value).div(props.state.total).times(100).toFixed(6);
-  return needToPayPercentageCal;
+  if (!props.state.total || !localPaymentAmount.value) return 0;
+  return new Decimal(needToPay.value).div(props.state.total).times(100).toFixed(6);
 });
 
 const needToSub = computed(() => {
@@ -118,23 +120,29 @@ const paymentPercentage = computed(() => {
   return percentageCal;
 });
 
+const handleAmountChange = () => {
+  emit('update-amount', {
+    id: props.cardData.id,
+    paymentAmount: Number(localPaymentAmount.value)
+  });
+};
+
+const handlePaymentMethodChange = () => {
+  emit('update-payment-method', {
+    id: props.cardData.id,
+    paymentMethod: localPaymentMethod.value
+  });
+};
+
 const handleConfirmPayment = () => {
   emit('confirm-payment', {
-    paymentAmount: localPaymentAmount.value,
-    paymentMethod: localPaymentMethod.value,
+    id: props.cardData.id,
     paymentConfirm: true
   });
   console.table('### confirm data' + props.cardData);
 };
 
-// watch(
-//   () => props.state,
-//   () => {
-//     console.log('### state: ', props.state.value);
-//   }
-// );
-
-const emit = defineEmits(['remove-card', 'confirm-card']);
+const emit = defineEmits(['remove-card', 'update-amount', 'update-payment-method', 'confirm-payment']);
 </script>
 
 <!------- style ------->

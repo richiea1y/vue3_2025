@@ -7,63 +7,118 @@ export default function usePayments(prop, emit) {
   // reactive creates deep reactivity for all nested properties
   const state = reactive({
     total: 0, // 總金額
-    cardList: [
-      {
-        id: Date.now(),
-        paymentMethod: '1',
-        paymentAmount: 0,
-        paymentConfirm: false,
-      }
-    ],
-    paymentFinished: false, // 是否付清總金額
-    currentPayment: 0, // 當前付款金額
-    overPayment: '', // 要付金額之差額
-    overPercentage: '', // 要付金額之百分比
-    payState: '', //試算當前所有輸入框裡所有金額之付款狀態
-    confirmCount: 0, //確認所有輸入框裡所有金額之付款狀態
+    // 是否付清總金額 - computed
+    paymentFinished: computed(() =>
+      state.currentPayment === state.total
+    ),
+    // 當前付款金額 = 所有卡片的付款金額總和
+    currentPayment: computed(() => paymentCards.value.reduce((acc, card) => acc + Number(card.paymentAmount), 0)),
+    // 超付金額 - computed
+    overPayment: computed(() => {
+      const diff = state.currentPayment - state.total;
+      return diff > 0 ? diff : 0;
+    }),
+    // 超付百分比 - computed
+    overPercentage: computed(() => {
+      if (!state.total) return 0;
+      return new Decimal(state.overPayment)
+        .div(state.total)
+        .times(100)
+        .toFixed(2);
+    }),
+    // 付款狀態 - computed
+    payState: computed(() => {
+      if (state.overPayment > 0) return 'overpaid';
+      if (state.paymentFinished) return 'completed';
+      if (state.currentPayment > 0) return 'partial';
+      return 'unpaid';
+    }),
+    // 已確認付款的卡片數量 - computed
+    confirmCount: computed(() =>
+      paymentCards.value.filter(card => card.paymentConfirm).length
+    )
   })
 
-  // 卡片操作
-  const addCard = () => {
-    state.cardList.unshift({
+  const paymentCards = ref([
+    {
       id: Date.now(),
+      paymentCardIndex: 0,
+      paymentMethod: '1',
+      paymentAmount: 0,
+      paymentConfirm: false,
+    }
+  ])
+
+  // 卡片操作
+
+  // 新增卡片
+  const addCard = () => {
+    paymentCards.value.unshift({
+      id: Date.now(),
+      paymentCardIndex: paymentCards.value.length,
       paymentMethod: '1',
       paymentAmount: 0,
       paymentConfirm: false,
     })
-    console.table(state.cardList)
+    updateCardIndexes();
+    console.table(paymentCards.value)
   }
 
+  // 移除卡片
   const removeCard = (index) => {
-    state.cardList.splice(index, 1)
-    console.table(state.cardList)
+    paymentCards.value.splice(index, 1)
+    updateCardIndexes();
+    console.table(paymentCards.value)
   }
 
-  const updateCardPayment = (index, paymentCard) => {
-    //                         ↑        ↑
-    //                       索引值    對應到父組件的 $event
-    // 更新對應卡片的資料
-    state.cardList[index] = {
-      ...state.cardList[index], // 保留原本卡片的所有資料
-      ...paymentCard,           // 用新的資料覆蓋原本的資料，paymentCard 已經包含了 paymentConfirm
-      // paymentConfirm: true      // 額外設定確認狀態
-    };
-
-    console.log(paymentCard);
-    console.table(state);
-
-    // 可以在這裡添加其他相關的業務邏輯
-    updatePaymentAmount
+  // 更新卡片索引
+  const updateCardIndexes = () => {
+    paymentCards.value.forEach((card, i) => {
+      card.paymentCardIndex = i;
+    });
   };
 
-  const updatePaymentAmount = (index) => {
-    state.currentPayment += state.cardList[index].paymentAmount;
+  // 即時更新卡片金額
+  const updateAmount = ({ id, paymentAmount }) => {
+    const cardIndex = paymentCards.value.findIndex(card => card.id === id);
+    if (cardIndex !== -1) {
+      paymentCards.value[cardIndex] = {
+        ...paymentCards.value[cardIndex],
+        paymentAmount
+      };
+    }
+    console.log('### currentPayment: ', state.currentPayment)
+  };
+
+  // 即時更新卡片付款方式
+  const updatePaymentMethod = ({ id, paymentMethod }) => {
+    const cardIndex = paymentCards.value.findIndex(card => card.id === id);
+    if (cardIndex !== -1) {
+      paymentCards.value[cardIndex] = {
+        ...paymentCards.value[cardIndex],
+        paymentMethod
+      };
+    }
+  };
+
+  //  更新付款確認狀態
+  const updatePaymentConfirm = ({ id, paymentConfirm }) => {
+    const cardIndex = paymentCards.value.findIndex(card => card.id === id);
+    if (cardIndex !== -1) {
+      paymentCards.value[cardIndex] = {
+        ...paymentCards.value[cardIndex],
+        paymentConfirm
+      };
+    }
   };
 
   return {
     state,
+    paymentCards,
     addCard,
     removeCard,
-    updateCardPayment
+    updateAmount,
+    updatePaymentMethod,
+    updatePaymentConfirm
   }
 }
