@@ -54,7 +54,6 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, watchEffect } from 'vue';
 import PaymentCard from './components/PaymentCard.vue';
 import usePayments from './composables/usePayments';
 

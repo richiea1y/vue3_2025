@@ -5,7 +5,7 @@ export default function usePayments(prop, emit) {
   // ref wraps the value in a .value property
   // For nested objects, ref creates a reactive wrapper only at the top level 
   // reactive creates deep reactivity for all nested properties
-  const state = reactive({
+  const state = ref({
     total: 0, // 總金額
     // 是否付清總金額 - computed
     paymentFinished: computed(() =>
@@ -14,13 +14,6 @@ export default function usePayments(prop, emit) {
     // 當前付款金額 = 所有卡片的付款金額總和
     currentPayment: computed(() => paymentCards.value.reduce((acc, card) => acc + Number(card.paymentAmount), 0)),
     alreadPaid: 0, // 已付金額
-    // 付款狀態 - computed
-    payState: computed(() => {
-      if (state.overPayment > 0) return 'overpaid';
-      if (state.paymentFinished) return 'completed';
-      if (state.currentPayment > 0) return 'partial';
-      return 'unpaid';
-    }),
     // 已確認付款的卡片數量 - computed
     confirmCount: computed(() =>
       paymentCards.value.filter(card => card.paymentConfirm).length
