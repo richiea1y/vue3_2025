@@ -11,7 +11,9 @@
       </div>
       <div class="remain-balance flex">
         <p class="content-center mr-4">{{ props.cardData.paymentConfirm ? '已付款' : '未付款' }}</p>
-        <el-button color="#90aad4" icon="Check" @click="handleConfirmPayment">確認付款</el-button>
+        <el-button color="#90aad4" icon="Check" @click="handleConfirmPayment" :disabled="props.cardData.paymentConfirm"
+          >確認付款</el-button
+        >
       </div>
       <el-button
         v-if="cardIndex !== 0"
@@ -20,6 +22,7 @@
         icon="CloseBold"
         class="delete-card-bt"
         @click="$emit('remove-card')"
+        :disabled="props.cardData.paymentConfirm"
       >
       </el-button>
       <div v-if="cardIndex === 0" class="m-[32] h-[32]"></div>
@@ -36,6 +39,7 @@
           class="max-w-60 min-w-60"
           name="payment-amount"
           type="text"
+          :disabled="props.cardData.paymentConfirm"
         />
       </div>
       <div class="amount-hint ml-36 -my-2">
@@ -52,6 +56,7 @@
           name="payment-percentage"
           type="text"
           placeholder="輸入支付金額"
+          :disabled="props.cardData.paymentConfirm"
         />
         <span class="ml-3 content-center">%</span>
       </div>
@@ -135,6 +140,8 @@ const handlePaymentMethodChange = () => {
 };
 
 const handleConfirmPayment = () => {
+  // 更新付款狀態
+  props.cardData.paymentConfirm = true;
   emit('confirm-payment', {
     id: props.cardData.id,
     paymentConfirm: true

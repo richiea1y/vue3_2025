@@ -22,7 +22,7 @@
     <!-- 子組件：付款資訊 -->
     <div class="card-container">
       <PaymentCard
-        v-for="card in paymentCards"
+        v-for="card in [...paymentCards].reverse()"
         :key="card.id"
         :state="state"
         :card-data="card"

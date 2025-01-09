@@ -53,7 +53,7 @@ export default function usePayments(prop, emit) {
 
   // 新增卡片
   const addCard = () => {
-    paymentCards.value.unshift({
+    paymentCards.value.push({
       id: Date.now(),
       paymentCardIndex: paymentCards.value.length,
       paymentMethod: '1',
