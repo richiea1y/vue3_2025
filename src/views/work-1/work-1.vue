@@ -52,6 +52,7 @@
         </el-button>
       </div>
     </div>
+    <div v-if="state.paymentFinished" class="submit-container text-right"><p class="text-lg">已支付所有金額！</p></div>
   </main>
 </template>
 
@@ -94,7 +95,8 @@ const onTotalPaymentChange = () => {
 
 .header-container,
 .card-container,
-.footer-container {
+.footer-container,
+.submit-container {
   max-width: 800px;
   margin: 0 auto;
   /* padding: 10px 20px; */
