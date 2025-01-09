@@ -13,19 +13,7 @@ export default function usePayments(prop, emit) {
     ),
     // 當前付款金額 = 所有卡片的付款金額總和
     currentPayment: computed(() => paymentCards.value.reduce((acc, card) => acc + Number(card.paymentAmount), 0)),
-    // 超付金額 - computed
-    overPayment: computed(() => {
-      const diff = state.currentPayment - state.total;
-      return diff > 0 ? diff : 0;
-    }),
-    // 超付百分比 - computed
-    overPercentage: computed(() => {
-      if (!state.total) return 0;
-      return new Decimal(state.overPayment)
-        .div(state.total)
-        .times(100)
-        .toFixed(2);
-    }),
+    alreadPaid: 0, // 已付金額
     // 付款狀態 - computed
     payState: computed(() => {
       if (state.overPayment > 0) return 'overpaid';
@@ -110,6 +98,11 @@ export default function usePayments(prop, emit) {
         paymentConfirm
       };
     }
+
+    // 如果是確認付款，將金額加入已付金額
+    if (paymentConfirm) {
+      state.alreadPaid += Number(paymentCards.value[cardIndex].paymentAmount);
+    }
   };
 
   return {
@@ -119,6 +112,6 @@ export default function usePayments(prop, emit) {
     removeCard,
     updateAmount,
     updatePaymentMethod,
-    updatePaymentConfirm
+    updatePaymentConfirm,
   }
 }

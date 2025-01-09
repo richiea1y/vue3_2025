@@ -113,7 +113,7 @@ const needToPayPercentage = computed(() => {
 });
 
 const needToSub = computed(() => {
-  return props.state.total - localPaymentAmount.value;
+  return props.state.total - props.state.currentPayment;
 });
 
 const paymentPercentage = computed(() => {

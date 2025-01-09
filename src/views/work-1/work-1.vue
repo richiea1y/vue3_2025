@@ -30,16 +30,15 @@
         @remove-card="removeCard(card.paymentCardIndex)"
         @update-amount="updateAmount"
         @update-payment-method="updatePaymentMethod"
+        @confirm-payment="updatePaymentConfirm"
       />
-      <!--                                   ↑        ↑           -->
-      <!--                                 索引值   子組件發送的資料 -->
     </div>
 
     <!-- 總金額、付款次數、剩餘款項 -->
     <div class="footer-container">
       <div class="payment">
         <h2 class="text-lg">已支付金額</h2>
-        <p class="text-lg text-[#bfa965]">{{ alreadypaid || 0 }}</p>
+        <p class="text-lg text-[#bfa965]">{{ state.alreadPaid || 0 }}</p>
       </div>
       <div class="total-remain-balance">
         <h2 class="text-lg">付款次數 / 剩餘款項</h2>
@@ -64,13 +63,8 @@ import usePayments from './composables/usePayments';
 // * 冒號左邊：是原始名稱（useFormatter 返回的屬性名）
 // * 冒號右邊：是你想要使用的新名稱
 
-const { state, paymentCards, addCard, removeCard, updateAmount, updatePaymentMethod } = usePayments();
-
-const alreadypaid = computed(() => {
-  if (paymentCards.paymentFinished) {
-    return currentPayment;
-  }
-});
+const { state, paymentCards, addCard, removeCard, updateAmount, updatePaymentMethod, updatePaymentConfirm } =
+  usePayments();
 
 const onTotalPaymentChange = () => {
   console.log('### totalPayment:', state.total);
