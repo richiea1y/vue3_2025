@@ -26,6 +26,7 @@
         :key="card.id"
         :state="state"
         :card-data="card"
+        :card-index="index"
         @remove-card="removeCard(index)"
         @confirm-payment="updateCardPayment(index, $event)"
       />

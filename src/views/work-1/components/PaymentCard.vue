@@ -13,8 +13,16 @@
         <p class="content-center mr-4">{{ props.cardData.paymentConfirm ? '已付款' : '未付款' }}</p>
         <el-button color="#90aad4" icon="Check" @click="handleConfirmPayment">確認付款</el-button>
       </div>
-      <el-button type="danger" circle icon="CloseBold" class="delete-card-bt" @click="$emit('remove-card')">
+      <el-button
+        v-if="cardIndex !== 0"
+        type="danger"
+        circle
+        icon="CloseBold"
+        class="delete-card-bt"
+        @click="$emit('remove-card')"
+      >
       </el-button>
+      <div v-if="cardIndex === 0" class="m-[32] h-[32]"></div>
     </div>
     <!-- Card content -->
     <div class="payment-card-content">
@@ -76,6 +84,9 @@ const props = defineProps({
     // 新增這個 prop
     type: Object,
     required: true
+  },
+  cardIndex: {
+    type: Number
   }
 });
 
@@ -116,12 +127,12 @@ const handleConfirmPayment = () => {
   console.table('### confirm data' + props.cardData);
 };
 
-watch(
-  () => props.state,
-  () => {
-    console.log('### state: ', props.state.value);
-  }
-);
+// watch(
+//   () => props.state,
+//   () => {
+//     console.log('### state: ', props.state.value);
+//   }
+// );
 
 const emit = defineEmits(['remove-card', 'confirm-card']);
 </script>
