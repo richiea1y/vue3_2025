@@ -9,7 +9,7 @@ export default function usePayments(prop, emit) {
     total: 0, // 總金額
     // 是否付清總金額 - computed
     paymentFinished: computed(() =>
-      state.currentPayment === state.total
+      state.alreadPaid === state.total && state.total > 0
     ),
     // 當前付款金額 = 所有卡片的付款金額總和
     currentPayment: computed(() => paymentCards.value.reduce((acc, card) => acc + Number(card.paymentAmount), 0)),

@@ -47,7 +47,7 @@
         </p>
       </div>
       <div class="submit-bt">
-        <el-button type="primary" size="large" disabled> 確認送出 </el-button>
+        <el-button type="primary" size="large" :disabled="!state.paymentFinished"> 確認送出 </el-button>
       </div>
     </div>
   </main>
