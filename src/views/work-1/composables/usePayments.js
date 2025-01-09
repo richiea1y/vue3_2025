@@ -8,9 +8,7 @@ export default function usePayments(prop, emit) {
   const state = ref({
     total: 0, // 總金額
     // 是否付清總金額 - computed
-    paymentFinished: computed(() =>
-      state.alreadPaid === state.total && state.total > 0
-    ),
+    paymentFinished: false,
     // 當前付款金額 = 所有卡片的付款金額總和
     currentPayment: computed(() => paymentCards.value.reduce((acc, card) => acc + Number(card.paymentAmount), 0)),
     alreadPaid: 0, // 已付金額
@@ -93,10 +91,11 @@ export default function usePayments(prop, emit) {
     }
 
     // 如果是確認付款，將金額加入已付金額
-    if (paymentConfirm) {
-      state.alreadPaid += Number(paymentCards.value[cardIndex].paymentAmount);
+    if (paymentConfirm && state.value.currentPayment <= state.value.total) {
+      state.value.alreadPaid += Number(paymentCards.value[cardIndex].paymentAmount);
     }
   };
+
 
   return {
     state,

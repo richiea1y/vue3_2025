@@ -96,8 +96,6 @@ const props = defineProps({
   }
 });
 
-const paymentAmount = ref(0);
-
 const localPaymentMethod = ref(props.cardData.paymentMethod || '1');
 const localPaymentAmount = ref(props.cardData.paymentAmount);
 
@@ -141,12 +139,17 @@ const handlePaymentMethodChange = () => {
 
 const handleConfirmPayment = () => {
   // 更新付款狀態
-  props.cardData.paymentConfirm = true;
-  emit('confirm-payment', {
-    id: props.cardData.id,
-    paymentConfirm: true
-  });
-  console.table('### confirm data' + props.cardData);
+  if (props.state.currentPayment <= props.state.total) {
+    props.cardData.paymentConfirm = true;
+    emit('confirm-payment', {
+      id: props.cardData.id,
+      paymentConfirm: true
+    });
+  }
+  console.table('### total: ' + props.state.total);
+  console.table('### currentPayment: ' + props.state.currentPayment);
+  console.table('### alreadPaid: ' + props.state.alreadPaid);
+  console.log('### paymentFinished: ', props.state.paymentFinished);
 };
 
 const emit = defineEmits(['remove-card', 'update-amount', 'update-payment-method', 'confirm-payment']);

@@ -38,7 +38,7 @@
     <div class="footer-container">
       <div class="payment">
         <h2 class="text-lg">已支付金額</h2>
-        <p class="text-lg text-[#bfa965]">{{ state.alreadPaid || 0 }}</p>
+        <p class="text-lg text-[#bfa965]">{{ state.alreadPaid }}</p>
       </div>
       <div class="total-remain-balance">
         <h2 class="text-lg">付款次數 / 剩餘款項</h2>
@@ -47,13 +47,16 @@
         </p>
       </div>
       <div class="submit-bt">
-        <el-button type="primary" size="large" :disabled="!state.paymentFinished"> 確認送出 </el-button>
+        <el-button type="primary" size="large" @click="handleSubmiteBtn" :disabled="state.paymentFinished">
+          確認送出
+        </el-button>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import PaymentCard from './components/PaymentCard.vue';
 import usePayments from './composables/usePayments';
 
@@ -64,6 +67,17 @@ import usePayments from './composables/usePayments';
 
 const { state, paymentCards, addCard, removeCard, updateAmount, updatePaymentMethod, updatePaymentConfirm } =
   usePayments();
+
+const handleSubmiteBtn = () => {
+  if (Number(state.value.alreadPaid) === Number(state.value.total)) {
+    console.log('### payment finished', {
+      alreadPaid: state.value.alreadPaid,
+      total: state.value.total
+    });
+    state.value.paymentFinished = true;
+    console.log('### submit button clicked');
+  }
+};
 
 const onTotalPaymentChange = () => {
   console.log('### totalPayment:', state.total);
