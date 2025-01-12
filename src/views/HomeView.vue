@@ -57,6 +57,13 @@ const chapters = [
     route: 'day-7',
     topics: ['router'],
     difficulty: 'intermediate'
+  },
+  {
+    day: 8,
+    title: 'Directive 自定義指令',
+    route: 'day-8',
+    topics: ['directive'],
+    difficulty: 'intermediate'
   }
 ];
 
