@@ -5,11 +5,6 @@ export default {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-<<<<<<< HEAD
-    extend: {
-      colors: {
-      }
-=======
     extend: {},
     screens: {
       xs: "480px",
@@ -17,7 +12,6 @@ export default {
       md: "768px",
       lg: "1024px",
       xl: "1280px",
->>>>>>> class/day-8-directive-richie
     },
   },
   plugins: [],
