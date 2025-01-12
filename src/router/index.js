@@ -59,6 +59,11 @@ const routes = [
     name: 'work-1',
     component: () => import('../views/work-1/work-1.vue')
   },
+  {
+    path: '/work-2',
+    name: 'work-2',
+    component: () => import('../views/work-2/work-2.vue')
+  },
 
 ]
 

@@ -74,8 +74,15 @@ const assignments = [
     route: 'work-1',
     topics: ['composable', 'componenet'],
     difficulty: 'basic'
+  },
+  {
+    work: 2,
+    title: 'Directives 練習',
+    route: 'work-2',
+    topics: ['directive'],
+    difficulty: 'intermediate'
   }
-]
+];
 
 // 難度標籤對照
 const difficultyMap = {
@@ -140,7 +147,11 @@ onMounted(async () => {
       </div>
     </el-card>
     <!-- work assignment -->
-    <el-card v-for="assignment in assignments" :key="assignment.work" class="hover:shadow-lg transition-shadow duration-300">
+    <el-card
+      v-for="assignment in assignments"
+      :key="assignment.work"
+      class="hover:shadow-lg transition-shadow duration-300"
+    >
       <template #header>
         <div class="flex justify-between items-center">
           <span class="text-lg font-medium"> Day-{{ assignment.work }}: {{ assignment.title }} </span>
